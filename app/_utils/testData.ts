@@ -1,5 +1,6 @@
 import { error } from "console";
 import * as fs from "fs";
+import { OutBook } from "./books-batch-generator";
 
 const FILE_PATH = "/public/books.json";
 const TEST_FILE_PATH = "/public/testData.json";
@@ -47,3 +48,14 @@ export const readFileAsync = (path: string) => {
     });
   });
 };
+
+
+export async function readBooks2() {
+  const path = process.cwd() + "/public/out/books-batch/book-0.json";
+  const promise = readFileAsync(path) as Promise<string>;
+  const content = await promise
+    .then((data) => JSON.parse(data))
+    .catch((error) => console.error(error));
+
+  return content as OutBook[]
+}

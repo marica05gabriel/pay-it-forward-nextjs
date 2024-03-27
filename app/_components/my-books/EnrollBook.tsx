@@ -8,7 +8,7 @@ export const EnrollBook = () => {
   routeSegments.shift();
   return (
     <>
-      <TitlePanel title="Enroll your books" routeSegments={routeSegments} />
+      <TitlePanel title="Enroll a book" routeSegments={routeSegments} />
 
       <div className="container px-6 mx-auto text-gray-800">
         <div

@@ -11,7 +11,7 @@ export const ListBooks = () => {
   return (
     <>
       <TitlePanel
-        title="Here you can see your books"
+        title="My books"
         routeSegments={routeSegments}
       />
       <div className="container px-6 mx-auto text-gray-800">
