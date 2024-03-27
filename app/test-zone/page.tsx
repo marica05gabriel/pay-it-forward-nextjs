@@ -1,6 +1,6 @@
-import { OutBook, manageCsvBooks2 } from "../utils/utils";
+import { OutBook, manageCsvBooks2 } from "../_utils/books-batch-generator";
 
-export default async function Page() {
+export default async function TestZonePage() {
   console.log("Hello on test Page");
   console.log("Trying to read lines from books.csv");
 

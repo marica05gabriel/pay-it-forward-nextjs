@@ -1,7 +1,7 @@
-import { ROUTES, RoutesEnum } from "../lib/routes-util";
-import { PaperBookListWrapper, readBooks } from "../lib/testData";
-import { TUKPage } from "../ui/navigation";
-import { TitlePanel } from "../ui/panels/title-panel";
+import { ROUTES, RoutesEnum } from "../_utils/routes-util";
+import { PaperBookListWrapper, readBooks } from "../_utils/testData";
+import { TUKPage } from "@/components/navigation";
+import { TitlePanel } from "@/components/panels/title-panel";
 
 export default async function FindBooksPage() {
   const routeSegments = ROUTES[RoutesEnum.FIND_BOOKS].split("/");

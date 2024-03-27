@@ -1,4 +1,4 @@
-import { ROUTES, RoutesEnum } from "@/app/lib/routes-util";
+import { ROUTES, RoutesEnum } from "@/app/_utils/routes-util";
 
 export type SubMenuList = SubMenuItem[];
 

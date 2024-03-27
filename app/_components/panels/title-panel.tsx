@@ -1,4 +1,4 @@
-import { toCapitalCase } from "@/app/lib/string-utils";
+import { toCapitalCase } from "@/app/_utils/string-utils";
 import Link from "next/link";
 
 interface Props {

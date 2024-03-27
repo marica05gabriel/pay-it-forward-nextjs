@@ -1,10 +1,9 @@
-import { RefObject } from "react";
 import { DashBoardSVG } from "../../../icons/DashBoardSVG";
 import { Item } from "./Item";
 import { ComplexItem } from "./ComplexItem";
 import { DELIVERABLES_SUB_MENU, PRODUCTS_SUB_MENU } from "../../const";
-import { ProductsSVG } from "@/app/ui/icons/ProductsSVG";
-import { DeliverablesSVG } from "@/app/ui/icons/DeliverablesSVG";
+import { ProductsSVG } from "@/components/icons/ProductsSVG";
+import { DeliverablesSVG } from "@/components/icons/DeliverablesSVG";
 
 export const MenuList = () => (
   <ul className="f-m-m">

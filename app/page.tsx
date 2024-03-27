@@ -1,5 +1,4 @@
-import { Navigation } from "./ui/navigation/Navigation";
-import { TitlePanel } from "./ui/panels/title-panel";
+import { TitlePanel } from "@/components/panels/title-panel";
 
 export default function DashboardPage() {
   return (

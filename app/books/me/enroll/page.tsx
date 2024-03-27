@@ -1,8 +1,5 @@
-import { EnrollBook } from "@/app/ui/my-books/EnrollBook";
+import { EnrollBook } from "@/components/my-books/EnrollBook";
 
-  export default async function EnrollBookPage() {
-      return (
-        <EnrollBook/>
-    );
-  }
-  
+export default async function EnrollBookPage() {
+  return <EnrollBook />;
+}

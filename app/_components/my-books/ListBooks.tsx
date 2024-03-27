@@ -1,7 +1,7 @@
-import { PaperBookListWrapper, readBooks } from "@/app/lib/testData";
+import { PaperBookListWrapper, readBooks } from "@/app/_utils/testData";
 import clsx from "clsx";
 import { TitlePanel } from "../panels/title-panel";
-import { ROUTES, RoutesEnum } from "@/app/lib/routes-util";
+import { ROUTES, RoutesEnum } from "@/app/_utils/routes-util";
 
 const isOverlapping = true;
 export const ListBooks = () => {

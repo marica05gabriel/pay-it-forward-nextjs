@@ -1,4 +1,4 @@
-import { ListBooks } from "@/app/ui/my-books/ListBooks";
+import { ListBooks } from "@/components/my-books/ListBooks";
 
 export default async function ListBooksPage() {
   return <ListBooks />;

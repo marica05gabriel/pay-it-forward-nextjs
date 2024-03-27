@@ -104,9 +104,13 @@ export async function manageCsvBooks2() {
   console.log(`Duration: ${diffTimeGlobal / 1000} s.`);
 
   console.log(availableCategories);
-  fs.writeFileSync(`${OUTPUT_DIR}/available-categories.json`, JSON.stringify(Array.from(availableCategories).sort(), null, 4), {
-    flag: "w",
-  });
+  fs.writeFileSync(
+    `${OUTPUT_DIR}/available-categories.json`,
+    JSON.stringify(Array.from(availableCategories).sort(), null, 4),
+    {
+      flag: "w",
+    }
+  );
   return outResult;
 }
 
@@ -170,8 +174,8 @@ function handleCategories(categoriesAsLine: string) {
     const trimmedCategory = category.trim();
     outCategories.push(trimmedCategory);
   }
-  for(const myCategory of outCategories) {
-    availableCategories.add(myCategory)
+  for (const myCategory of outCategories) {
+    availableCategories.add(myCategory);
   }
   return outCategories;
 }
@@ -189,7 +193,6 @@ function handleDescription(descriptionAsLine: string) {
 }
 
 function handleISBNs(isbnsAsLine: string) {
-  // 1101598921,9781101598924
   const isbns = isbnsAsLine.split(",");
   const isbnList = [];
   for (const isbn of isbns) {
