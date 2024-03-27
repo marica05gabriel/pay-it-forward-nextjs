@@ -1,5 +1,5 @@
 import { OutBook } from "@/utils/books-batch-generator";
-import { truncate, truncateDescription, truncateLong, truncateShort, truncateTitle } from "@/utils/string-utils";
+import { truncateLong, truncateShort } from "@/utils/string-utils";
 import Image from "next/image";
 
 interface Props {
@@ -15,7 +15,10 @@ export const BookListing = ({ books }: Props) => {
             {books.map((book) => {
               const properties = new Map<string, string>();
               properties.set("Authors", truncateShort(book.authors.toString()));
-              properties.set("Categories", truncateShort(book.categories.toString()));
+              properties.set(
+                "Categories",
+                truncateShort(book.categories.toString())
+              );
               properties.set("Description", truncateLong(book.description));
 
               return (
@@ -50,15 +53,17 @@ const BookCard = ({ title, properties }: BookCardProps) => {
       />
       <div className="h-80">
         <div className="h-60 px-1 py-4">
-          <div className="h-20 text-gray-900 font-bold text-l mb-2">{title}</div>
-          <p className="text-gray-700 text-base">
+          <div className="h-20 text-gray-900 font-bold text-l mb-2">
+            {title}
+          </div>
+          <div className="text-gray-700 text-base">
             {Array.from(properties.keys()).map((key) => (
-              <div>
+              <p key={key}>
                 <b>{key}: </b>
                 {properties.get(key)}
-              </div>
+              </p>
             ))}
-          </p>
+          </div>
         </div>
         <div className="px-1 py-10 height-auto">
           <a href="#" className="text-blue-500 hover:underline">

@@ -15,13 +15,13 @@ export default async function FindBooksPage() {
     console.error("Books are missing!");
   }
 
-  const outBooks =  await readBooks2()
+  const outBooks = await readBooks2();
 
   return (
     <>
       <TitlePanel title="Find Books" routeSegments={routeSegments} />
       <TUKPage>
-        <BookListing books={outBooks}/>
+        <BookListing books={outBooks} />
         {/* {readBooksAsync.books.map((book) => (
           <li key={book.title} className="text-gray-800">
             {book.title}
