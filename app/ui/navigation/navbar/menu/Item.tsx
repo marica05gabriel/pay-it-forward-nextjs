@@ -11,7 +11,7 @@ export const Item = ({ label, href, isSelected }: Props) => {
       className={clsx(
         "hover:text-indigo-700 cursor-pointer h-full flex items-center text-sm mx-5 tracking-normal",
         isSelected && "text-indigo-700",
-        !isSelected && "text-gry-800"
+        !isSelected && "text-gray-800"
       )}
     >
       <a href={href}> {label}</a>

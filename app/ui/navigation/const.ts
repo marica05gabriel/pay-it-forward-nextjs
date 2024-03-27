@@ -1,3 +1,5 @@
+import { ROUTES, RoutesEnum } from "@/app/lib/routes-util";
+
 export type SubMenuList = SubMenuItem[];
 
 export type SubMenuItem = {
@@ -9,12 +11,12 @@ export type SubMenuItem = {
 export const MY_BOOKS_SUB_MENU: SubMenuList = [
   {
     label: "Enroll a book",
-    href: "/my-books/enroll",
+    href: ROUTES[RoutesEnum.ENROLL_BOOK],
     isSelected: true,
   },
   {
     label: "My Books",
-    href: "/my-books/list",
+    href: ROUTES[RoutesEnum.MY_BOOKS],
     isSelected: false,
   }
 ];

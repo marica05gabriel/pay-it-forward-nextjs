@@ -26,7 +26,7 @@ interface InternalItemProps {
 }
 const InternalItem = ({ label }: InternalItemProps) => {
   return (
-    <a className="flex items-center">
+    <a className="flex items-center text-gray-800">
       {label}
       <span className="ml-2">
         <svg
@@ -61,7 +61,7 @@ const SubMenu = ({ subListRef, itemList }: SubMenuProps) => (
     {itemList.map((item) => (
       <li
         key={item.label}
-        className="cursor-pointer text-gray-600 text-sm leading-3 tracking-normal py-3 hover:bg-indigo-700 hover:text-white px-3 font-normal"
+        className="cursor-pointer text-gray-800 text-sm leading-3 tracking-normal py-3 hover:bg-indigo-700 hover:text-white px-3 font-normal"
       >
         <a href={item.href}>{item.label}</a>
       </li>
