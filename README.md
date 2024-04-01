@@ -29,21 +29,16 @@ npm run build
    ```
    - See https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss#recommended-vs-code-settings
 
-
-
 ## NexjJs
+
 - We use app router, instead of pages router.
 
-
 ## Styles
+
 - Use Hero Icons project by tailwind labs if needed
-    - https://github.com/tailwindlabs/heroicons
-    - https://heroicons.com/ 
+  - https://github.com/tailwindlabs/heroicons
+  - https://heroicons.com/
 - Use clsx to toggle class names: https://github.com/lukeed/clsx
-
-
-
-
 
 ====================================================================================================
 ============================================= Generated ============================================
@@ -84,3 +79,16 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+# Notes
+
+- installed thirdweb using `npm install thirdweb` -> v5.0.3
+- npm i @thirdweb-dev/react @thirdweb-dev/sdk
+- npm i pino-pretty ? idk what/s this
+- Created a react context fo keeping third web clinet and chann (not sure if needed though
+- create a client component where wrapping the child with the context for third web client, chain and so on
+- Be careful at .env -> need to add NEXT_PUBLIC prefix to be exposed on client !!!
+- wrap the component with ThirdWebProvider as well after initializing the client
+- npm i react-query
+- import query client from `@tanstack/react-query` !!! See: `https://github.com/TanStack/query/issues/4933#issuecomment-1430925282`
+  Otherwize you'll get "Unhandled Runtime Error - Error: No QueryClient set, use QueryClientProvider to set one"

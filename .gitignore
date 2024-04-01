@@ -37,3 +37,6 @@ next-env.d.ts
 
 # public/out directory for computed resources
 /public/out
+
+# Test wallets secret data
+.test-wallets
