@@ -1,6 +1,8 @@
-import { RefObject, useRef } from 'react';
-import { Header } from './header/Header';
+import { useThirdWebContext } from '@/utils/context-providers';
+import { RefObject } from 'react';
+import { ConnectButton } from '../../thirdweb/thirdweb-utils';
 import { Footer } from './footer/Footer';
+import { Header } from './header/Header';
 import { MenuList } from './menu/MenuList';
 
 interface Props {
@@ -9,6 +11,13 @@ interface Props {
   sidebarHandler: (display: boolean) => void;
 }
 export const NavBar = ({ menu, sidebarHandler, items }: Props) => {
+  console.log('NavBar');
+  const thirdWebContext = useThirdWebContext();
+
+  if (thirdWebContext == null) {
+    return <>Loading...</>;
+  }
+
   return (
     <>
       <nav className='relative z-20 mx-auto w-full bg-white shadow'>
@@ -19,7 +28,6 @@ export const NavBar = ({ menu, sidebarHandler, items }: Props) => {
           </div>
 
           <Footer />
-
           <div className='visible flex items-center xl:hidden'>
             <div>
               <button

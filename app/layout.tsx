@@ -2,6 +2,7 @@ import '@/components/globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Navigation } from '@/components/navigation/Navigation';
+import { ThirdWebContextProvider } from './_utils/context-providers';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -18,8 +19,10 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={inter.className}>
-        <Navigation />
-        <div id='page-container'>{children}</div>
+        <ThirdWebContextProvider>
+          <Navigation />
+          <div id='page-container'>{children}</div>
+        </ThirdWebContextProvider>
       </body>
     </html>
   );

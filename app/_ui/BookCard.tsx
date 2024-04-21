@@ -16,6 +16,9 @@ export const BookCard = ({ book }: BookCardProps) => {
         height={100}
         alt='Placeholder Image'
         className='w-full rounded-md object-cover'
+        priority={false}
+        placeholder='blur'
+        blurDataURL='/public/no-book-cover-available.png'
       />
       <div className='h-80'>
         <div className='h-60 px-1 py-4'>
