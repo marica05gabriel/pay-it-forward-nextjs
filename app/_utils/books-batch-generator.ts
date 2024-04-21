@@ -1,5 +1,5 @@
-import fs from "fs";
-import readline from "readline";
+import fs from 'fs';
+import readline from 'readline';
 
 type Book = {
   id: string;
@@ -31,22 +31,22 @@ export type OutBook = {
 };
 
 type FIELD_NAMES =
-  | "id"
-  | "authors"
-  | "categories"
-  | "description"
-  | "image"
-  | "info_link"
-  | "isbn"
-  | "preview_link"
-  | "published_date"
-  | "publisher"
-  | "ratings_count"
-  | "title";
+  | 'id'
+  | 'authors'
+  | 'categories'
+  | 'description'
+  | 'image'
+  | 'info_link'
+  | 'isbn'
+  | 'preview_link'
+  | 'published_date'
+  | 'publisher'
+  | 'ratings_count'
+  | 'title';
 const BATCH_SIZE: number = 100;
 
 const BOOKS_TO_HANDLE = 1_000_000;
-const OUTPUT_DIR = "public/out/books-batch";
+const OUTPUT_DIR = 'public/out/books-batch';
 const OUTPUT_FILE = `${OUTPUT_DIR}/book`;
 const availableCategories = new Set<string>();
 
@@ -57,7 +57,7 @@ export async function manageCsvBooks2() {
     fs.mkdirSync(OUTPUT_DIR);
   }
 
-  const inputFile = "public/books.csv";
+  const inputFile = 'public/books.csv';
   const inputStream = fs.createReadStream(inputFile);
   const readLine = readline.createInterface({
     input: inputStream,
@@ -96,7 +96,7 @@ export async function manageCsvBooks2() {
   // Write last batch
   writeBooksBatch(batchNr, outResult);
 
-  console.log("End");
+  console.log('End');
   const endTimeGlobal = new Date();
   const diffTimeGlobal =
     endTimeGlobal.getMilliseconds() - startTimeGlobal.getMilliseconds();
@@ -108,14 +108,14 @@ export async function manageCsvBooks2() {
     `${OUTPUT_DIR}/available-categories.json`,
     JSON.stringify(Array.from(availableCategories).sort(), null, 4),
     {
-      flag: "w",
+      flag: 'w',
     }
   );
   return outResult;
 }
 
 function handleBookLine(bookLine: string) {
-  const columns = bookLine.split(";");
+  const columns = bookLine.split(';');
 
   const book: Book = {
     id: columns[0],
@@ -149,7 +149,7 @@ function handleBookLine(bookLine: string) {
 
 function handleAuthors(authorsAsLine: string) {
   const authors1 = authorsAsLine.substring(1, authorsAsLine.length - 1);
-  const authors2 = authors1.split(",");
+  const authors2 = authors1.split(',');
   const outAuthors = [];
   for (const author of authors2) {
     const trimmedAuthor = author.trim();
@@ -167,8 +167,8 @@ function handleCategories(categoriesAsLine: string) {
     1,
     categoriesAsLine.length - 1
   );
-  const categories1 = categories0.replaceAll("'", "");
-  const categories2 = categories1.split(",");
+  const categories1 = categories0.replaceAll("'", '');
+  const categories2 = categories1.split(',');
   const outCategories = [];
   for (const category of categories2) {
     const trimmedCategory = category.trim();
@@ -193,7 +193,7 @@ function handleDescription(descriptionAsLine: string) {
 }
 
 function handleISBNs(isbnsAsLine: string) {
-  const isbns = isbnsAsLine.split(",");
+  const isbns = isbnsAsLine.split(',');
   const isbnList = [];
   for (const isbn of isbns) {
     isbnList.push(isbn.trim());
@@ -209,7 +209,7 @@ function writeBooksBatch(batchNr: number, outResult: OutBook[]) {
     `Writing to file : ${batchFileName}. Nr of books: ${outResult.length}`
   );
   fs.writeFileSync(batchFileName, JSON.stringify(outResult, null, 4), {
-    flag: "w",
+    flag: 'w',
   });
   console.log(`Finishing writing to file : ${batchFileName}`);
 

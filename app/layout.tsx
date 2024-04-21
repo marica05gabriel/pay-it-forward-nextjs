@@ -1,13 +1,13 @@
-import "@/components/globals.css";
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import { Navigation } from "@/components/navigation/Navigation";
+import '@/components/globals.css';
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import { Navigation } from '@/components/navigation/Navigation';
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: "Pay It Forward",
-  description: "Exhange platform for paper books ;)",
+  title: 'Pay It Forward',
+  description: 'Exhange platform for paper books ;)',
 };
 
 export default function RootLayout({
@@ -16,10 +16,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang='en'>
       <body className={inter.className}>
         <Navigation />
-        {children}
+        <div id='page-container'>{children}</div>
       </body>
     </html>
   );

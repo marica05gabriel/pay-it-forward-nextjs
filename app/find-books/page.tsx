@@ -1,10 +1,11 @@
 import { TitlePanel } from '@/components/panels/title-panel';
-import ThirdWebContainer from '@/components/thirdweb/ThirdWebContainer';
+import { BookListing } from '@/ui/BookListing';
 import { TUKPage } from '@/ui/TUKPage';
 import { RoutesEnum, getRouteSettings } from '@/utils/routes-util';
+import { TEST_BOOK_LIST } from '@/utils/testData';
 
-export default function ThirdWebPage() {
-  const currentRoute = RoutesEnum.TEST_ZONE;
+export default async function FindBooksPage() {
+  const currentRoute = RoutesEnum.FIND_BOOKS;
   const routeSettings = getRouteSettings(currentRoute);
   console.log(RoutesEnum[currentRoute]);
 
@@ -15,7 +16,7 @@ export default function ThirdWebPage() {
         routeSegments={routeSettings.segments}
       />
       <TUKPage>
-        <ThirdWebContainer />;
+        <BookListing books={TEST_BOOK_LIST} />
       </TUKPage>
     </>
   );

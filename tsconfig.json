@@ -21,6 +21,7 @@
       "@/*": ["./*"],
       "@/app/": ["./app/*"],
       "@/components/*": ["./app/_components/*"],
+      "@/ui/*": ["./app/_ui/*"],
       "@/utils/*": ["./app/_utils/*"],
     }
   },

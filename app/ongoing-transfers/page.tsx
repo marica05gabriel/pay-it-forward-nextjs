@@ -1,10 +1,9 @@
 import { TitlePanel } from '@/components/panels/title-panel';
-import ThirdWebContainer from '@/components/thirdweb/ThirdWebContainer';
 import { TUKPage } from '@/ui/TUKPage';
-import { RoutesEnum, getRouteSettings } from '@/utils/routes-util';
+import { RoutesEnum, getRouteSettings } from '../_utils/routes-util';
 
-export default function ThirdWebPage() {
-  const currentRoute = RoutesEnum.TEST_ZONE;
+export default async function OngoingTransfersPage() {
+  const currentRoute = RoutesEnum.BOOK_TRANSFERS;
   const routeSettings = getRouteSettings(currentRoute);
   console.log(RoutesEnum[currentRoute]);
 
@@ -15,7 +14,7 @@ export default function ThirdWebPage() {
         routeSegments={routeSettings.segments}
       />
       <TUKPage>
-        <ThirdWebContainer />;
+        <div>OngoingTransfersPage</div>
       </TUKPage>
     </>
   );

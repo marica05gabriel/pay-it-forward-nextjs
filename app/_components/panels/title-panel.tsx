@@ -1,27 +1,26 @@
-import { toCapitalCase } from "@/app/_utils/string-utils";
-import Link from "next/link";
+import { Segment } from '@/utils/routes-util';
+import Link from 'next/link';
 
 interface Props {
   title: string;
-  routeSegments: string[];
+  routeSegments: Segment[];
 }
+
 export const TitlePanel = ({ title, routeSegments }: Props) => {
-  let composeRoutes = "";
   return (
-    <div className="bg-gray-800 pt-8 pb-16 relative z-10">
-      <div className="container px-6 mx-auto flex flex-col lg:flex-row items-start lg:items-center justify-between">
-        <div className="flex-col flex lg:flex-row items-start lg:items-center">
-          <div className="ml-0 lg:ml-20 my-6 lg:my-0">
-            <h4 className="text-2xl font-bold leading-tight text-white mb-2">
+    <div className='relative z-10 bg-gray-800 pb-16 pt-8'>
+      <div className='container mx-auto flex flex-col items-start justify-between px-6 lg:flex-row lg:items-center'>
+        <div className='flex flex-col items-start lg:flex-row lg:items-center'>
+          <div className='my-6 ml-0 lg:my-0 lg:ml-20'>
+            <h4 className='mb-2 text-2xl font-bold leading-tight text-white'>
               {title}
             </h4>
-            <p className="flex items-center text-gray-300 text-xs">
+            <p className='flex items-center text-xs text-gray-300'>
               {routeSegments.map((segment, index) => {
-                composeRoutes = composeRoutes.concat('/').concat(segment)
                 return (
-                  <Link href={composeRoutes} key={index}>
-                    <span className="mx-2">&gt;</span>
-                    <span className="cursor-pointer">{toCapitalCase(segment)}</span>
+                  <Link href={segment.route} key={index}>
+                    <span className='mx-2'>&gt;</span>
+                    <span className='cursor-pointer'>{segment.label}</span>
                   </Link>
                 );
               })}

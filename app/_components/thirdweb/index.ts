@@ -2,6 +2,6 @@
 
 export {
   ThirdwebSDKProvider,
-  metamaskWallet,
+  //   metamaskWallet,
   ConnectWallet,
 } from "@thirdweb-dev/react";
