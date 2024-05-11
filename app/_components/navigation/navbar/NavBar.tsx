@@ -1,6 +1,5 @@
 import { useThirdWebContext } from '@/utils/context-providers';
 import { RefObject } from 'react';
-import { ConnectButton } from '../../thirdweb/thirdweb-utils';
 import { Footer } from './footer/Footer';
 import { Header } from './header/Header';
 import { MenuList } from './menu/MenuList';

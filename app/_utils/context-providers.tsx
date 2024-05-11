@@ -50,14 +50,11 @@ export const ThirdWebContextProvider = ({ children }: Props) => {
   const initialState = initializeThirdWebContext();
 
   return (
-    <>
-      <QueryClientProvider client={queryClient}>
-        <ThirdWebContext.Provider value={initialState}>
-          <div className='text-black'>ThirdWebContainer</div>
-          {children}
-        </ThirdWebContext.Provider>
-      </QueryClientProvider>
-    </>
+    <QueryClientProvider client={queryClient}>
+      <ThirdWebContext.Provider value={initialState}>
+        {children}
+      </ThirdWebContext.Provider>
+    </QueryClientProvider>
   );
 };
 

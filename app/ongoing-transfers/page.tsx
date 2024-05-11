@@ -1,6 +1,7 @@
 import { TitlePanel } from '@/components/panels/title-panel';
 import { TUKPage } from '@/ui/TUKPage';
-import { RoutesEnum, getRouteSettings } from '../_utils/routes-util';
+import { RoutesEnum, getRouteSettings } from '@/utils/routes-util';
+import { ChatComponent } from '@/components/chat/ChatComponent';
 
 export default async function OngoingTransfersPage() {
   const currentRoute = RoutesEnum.BOOK_TRANSFERS;
@@ -14,7 +15,7 @@ export default async function OngoingTransfersPage() {
         routeSegments={routeSettings.segments}
       />
       <TUKPage>
-        <div>OngoingTransfersPage</div>
+        <ChatComponent />
       </TUKPage>
     </>
   );

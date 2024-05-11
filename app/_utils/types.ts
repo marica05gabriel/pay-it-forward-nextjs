@@ -8,3 +8,15 @@ export type BookType = {
   isbn13?: string;
   isbn10?: string;
 };
+
+export type ChatContactData = {
+  nickname: string;
+  lastMessage: string;
+  avatar: string;
+};
+
+export type ChatMessageType = 'incoming' | 'outgoing';
+export type ChatMessage = {
+  message: string;
+  type: ChatMessageType;
+};

@@ -1,8 +1,8 @@
 import '@/components/globals.css';
+import { Navigation } from '@/components/navigation/Navigation';
+import { ThirdWebContextProvider } from '@/utils/context-providers';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import { Navigation } from '@/components/navigation/Navigation';
-import { ThirdWebContextProvider } from './_utils/context-providers';
 
 const inter = Inter({ subsets: ['latin'] });
 
