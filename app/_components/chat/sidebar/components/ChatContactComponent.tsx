@@ -1,11 +1,29 @@
+import clsx from 'clsx';
+
 interface Props {
+  id: string;
   nickname: string;
   lastMessage: string;
   avatar: string;
+  isActive: boolean;
+  setActiveChat: (chatId: string) => void;
 }
-export const ChatContact = ({ nickname, lastMessage, avatar }: Props) => {
+export const ChatContactComponent = ({
+  id,
+  nickname,
+  avatar,
+  lastMessage,
+  isActive,
+  setActiveChat,
+}: Props) => {
   return (
-    <div className='mb-4 flex cursor-pointer items-center rounded-md p-2 hover:bg-gray-100'>
+    <div
+      className={clsx(
+        'mb-4 flex cursor-pointer items-center rounded-md p-2 hover:bg-gray-300',
+        isActive && 'bg-gray-200'
+      )}
+      onClick={() => setActiveChat(id)}
+    >
       <div className='mr-3 h-12 w-12 rounded-full bg-gray-300'>
         <img
           src={avatar}

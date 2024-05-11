@@ -1,10 +1,29 @@
+import { useCallback } from 'react';
+
 interface Props {
+  id: string;
   message: string;
   avatar: string;
+  isLastMessage: boolean;
 }
-export const OutgoingMessage = ({ message, avatar }: Props) => {
+export const OutgoingMessage = ({
+  id,
+  message,
+  avatar,
+  isLastMessage,
+}: Props) => {
+  const setRef = useCallback((node: HTMLDivElement) => {
+    if (node) {
+      node.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
+  }, []);
+
   return (
-    <div className='mb-4 flex cursor-pointer justify-end'>
+    <div
+      id={`message-${id}`}
+      ref={isLastMessage ? setRef : null}
+      className='mb-4 flex cursor-pointer justify-end'
+    >
       <div className='flex max-w-96 gap-3 rounded-lg bg-indigo-500 p-3 text-white'>
         <p>{message}</p>
       </div>

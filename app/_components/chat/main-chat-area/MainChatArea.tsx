@@ -1,39 +1,95 @@
-import { chatMessagesList } from '@/utils/chat-contact-list-test-data';
 import { Header } from './components/Header';
 import { IncomingMessage } from './components/IncomingMessage';
 import { OutgoingMessage } from './components/OutgoingMessage';
 import { MainChatContainer } from './container/MainChatContainer';
 import { ChatMessagesContainer } from './container/ChatMessagesContainer';
 import { ChatInput } from './components/ChatInput';
-import { ChatMessage } from '@/app/_utils/types';
+import {
+  ActiveChat,
+  Chat,
+  ChatContact,
+  ChatMessage,
+  ChatMessageType,
+} from '@/app/_utils/types';
+import { useEffect, useState } from 'react';
 
-export const MainChatArea = () => {
-  const userAvatar =
-    'https://placehold.co/200x/ffa8e4/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato';
-  const myAvatar =
-    'https://placehold.co/200x/b7a8ff/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato';
+interface Props {
+  activeChat: ActiveChat;
+  me: ChatContact;
+  sendMessage: (
+    fromId: string,
+    toId: string,
+    chatId: string,
+    message: string
+  ) => void;
+}
+type Message = {
+  id: string;
+  isLastMessage: boolean;
+  message: string;
+  avatar: string;
+  type: ChatMessageType;
+};
+export const MainChatArea = ({ activeChat, me, sendMessage }: Props) => {
+  const [messages, setMessages] = useState<Message[]>([]);
 
-  const renderMessages = (chatMessagesList: ChatMessage[]) => {
-    return chatMessagesList.map((chatMessage) => {
-      if (chatMessage.type === 'incoming') {
-        return (
-          <IncomingMessage message={chatMessage.message} avatar={userAvatar} />
-        );
-      } else {
-        return (
-          <OutgoingMessage message={chatMessage.message} avatar={myAvatar} />
-        );
-      }
+  useEffect(() => {
+    const messages: Message[] = [];
+    if (activeChat.chat.messages.length <= 0) {
+      return;
+    }
+
+    const contact = activeChat.contact;
+    const lastMessageId =
+      activeChat.chat.messages[activeChat.chat.messages.length - 1]?.id;
+    activeChat.chat.messages.forEach((message) => {
+      const isLastMessage = lastMessageId === message.id;
+      const avatar = message.type === 'incoming' ? contact.avatar : me.avatar;
+      messages.push({
+        id: message.id,
+        message: message.message,
+        isLastMessage: isLastMessage,
+        avatar: avatar,
+        type: message.type,
+      });
     });
-  };
+    setMessages(messages);
+  }, [activeChat]);
 
   return (
     <MainChatContainer>
-      <Header title={'Alice'} />
+      <Header title={activeChat.contact.nickname} />
       <ChatMessagesContainer>
-        {renderMessages(chatMessagesList)}
+        {messages.map((message, index) => {
+          if (message.type === 'incoming') {
+            return (
+              <IncomingMessage
+                key={message.id}
+                id={message.id}
+                isLastMessage={message.isLastMessage}
+                message={message.message}
+                avatar={message.avatar}
+              />
+            );
+          } else {
+            return (
+              <OutgoingMessage
+                key={message.id}
+                id={message.id}
+                isLastMessage={message.isLastMessage}
+                message={message.message}
+                avatar={message.avatar}
+              />
+            );
+          }
+        })}
       </ChatMessagesContainer>
-      <ChatInput />
+      <ChatInput
+        chatId={activeChat.chat.id}
+        myId={me.id}
+        contactId={activeChat.contact.id}
+        sendMessage={sendMessage}
+      />
     </MainChatContainer>
   );
 };
