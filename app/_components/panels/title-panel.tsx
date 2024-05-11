@@ -8,7 +8,7 @@ interface Props {
 
 export const TitlePanel = ({ title, routeSegments }: Props) => {
   return (
-    <div className='relative z-10 bg-gray-800 pb-16 pt-8'>
+    <div className='relative z-10 h-32 bg-gray-800 pb-16 pt-8'>
       <div className='container mx-auto flex flex-col items-start justify-between px-6 lg:flex-row lg:items-center'>
         <div className='flex flex-col items-start lg:flex-row lg:items-center'>
           <div className='my-6 ml-0 lg:my-0 lg:ml-20'>

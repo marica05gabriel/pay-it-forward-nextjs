@@ -5,6 +5,8 @@ interface Props {
 }
 export const ContactListContainer = ({ children }: Props) => {
   return (
-    <div className='mb-9 h-screen overflow-y-auto p-3 pb-20'>{children}</div>
+    <div className='h-[calc(100vh-256px)] overflow-y-auto p-3 pb-3'>
+      {children}
+    </div>
   );
 };

@@ -15,5 +15,5 @@ interface ContainerProps {
   children: ReactNode;
 }
 const ChatContainer = ({ children }: ContainerProps) => (
-  <div className='flex h-screen overflow-hidden'>{children}</div>
+  <div className='flex h-[calc(100vh-192px)] overflow-hidden'>{children}</div>
 );
