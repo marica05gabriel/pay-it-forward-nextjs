@@ -2,7 +2,7 @@
 import { BookInfoForm } from './BookInfoForm';
 import { SearchISBNForm } from './SearchISBNForm';
 import { SelectLocationForm } from './SelectLocationForm';
-import { ChangeEvent, MouseEvent, useState } from 'react';
+import { MouseEvent, useState } from 'react';
 
 export type Book = {
   authors: string;
@@ -10,15 +10,26 @@ export type Book = {
   isbn13: string;
   title: string;
 };
+export type BookLocation = {
+  id: number;
+  country: string;
+  city: string;
+};
 const NO_BOOK: Book = {
   authors: '',
   imageUrl: '/no-book-cover-available.png',
   isbn13: '',
   title: '',
 };
+const NO_LOCATION = {
+  id: -1,
+  country: '',
+  city: '',
+};
 export const EnrollBookForm = () => {
-  const [book, setBook] = useState<Book>(NO_BOOK);
   const [loading, setLoading] = useState(false);
+  const [book, setBook] = useState<Book>(NO_BOOK);
+  const [location, setLocation] = useState();
 
   const handleOnSearch = async (
     e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>,
@@ -29,9 +40,7 @@ export const EnrollBookForm = () => {
       method: 'GET',
     });
     const data = await response.json();
-    console.log(data);
     setBook(data.book);
-    console.log(data);
     setLoading(false);
   };
 

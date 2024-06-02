@@ -4,7 +4,7 @@ interface Props {
   toggleSearch: () => void;
   searchQuery: string;
   onSearch: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  options: string[];
+  options: Set<string>;
   handleSetValue: (country: string) => void;
 }
 export const SelectForm = ({
@@ -49,7 +49,7 @@ export const SelectForm = ({
         value={searchQuery}
         onChange={handleInputChange}
       />
-      {options.map((option, index) => (
+      {Array.from(options).map((option, index) => (
         <div
           className='hover:bg-gray-500'
           key={index}

@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import { SelectForm } from './SelectForm';
 import { BookLocationFormContainer } from './BookLocationForm';
+import { BookLocation } from './EnrollBookForm';
+import useDebounce from '@/app/_utils/useDebounce';
 
 export const SelectLocationForm = () => {
   const [selectedCountry, setSelectedCountry] = useState('Select country');
@@ -13,29 +15,90 @@ export const SelectLocationForm = () => {
   const [countrySearchQuery, setCountrySearchQuery] = useState('');
   const [citySearchQuery, setCitySearchQuery] = useState('');
 
-  const [countryOptions, setCountryOptions] = useState<string[]>([]);
-  const [cityOptions, setCityOptions] = useState<string[]>([]);
+  const [countryOptions, setCountryOptions] = useState<Set<string>>(new Set());
+  const [cityOptions, setCityOptions] = useState<Set<string>>(new Set());
 
   const handleSearchCountry = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCountrySearchQuery(e.target.value);
-    setCountryOptions(e.target.value.split(' '));
   };
 
   const handleSearchCity = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCitySearchQuery(e.target.value);
-    setCityOptions(e.target.value.split(' '));
   };
+
+  const searchCountry = async () => {
+    if (!countrySearchQuery || countrySearchQuery.length < 3) {
+      return;
+    }
+    const response = await fetch(
+      `/api/book/location/country?country=${countrySearchQuery}`,
+      { method: 'GET' }
+    );
+    response
+      .json()
+      .then((data: { locations: BookLocation[] }) => {
+        if (data && data.locations && Array.isArray(data.locations)) {
+          const countries = data.locations.map((location) => location.country);
+          setCountryOptions(new Set(countries));
+        }
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  };
+
+  const searchCity = async () => {
+    if (
+      !selectedCountry ||
+      selectedCountry.length < 3 ||
+      !citySearchQuery ||
+      citySearchQuery.length < 3
+    ) {
+      return;
+    }
+    const response = await fetch(
+      `/api/book/location/city?country=${selectedCountry}&city=${citySearchQuery}`,
+      { method: 'GET' }
+    );
+    response
+      .json()
+      .then((data: { locations: BookLocation[] }) => {
+        if (data && data.locations && Array.isArray(data.locations)) {
+          const cities = data.locations.map((location) => location.city);
+          setCityOptions(new Set(cities));
+        }
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  };
+  useDebounce(
+    () => {
+      searchCountry();
+    },
+    [countrySearchQuery],
+    800
+  );
+
+  useDebounce(
+    () => {
+      searchCity();
+    },
+    [citySearchQuery],
+    800
+  );
 
   const handleSetCountry = (country: string) => {
     setSelectedCountry(country);
     setCountrySearchQuery('');
-    setCountryOptions([]);
+    setCountryOptions(new Set());
     setCountrySearchOpen(false);
+    handleSetCity('');
   };
   const handleSetCity = (city: string) => {
-    setSelectedCity(selectedCountry + '_' + city);
+    setSelectedCity(city);
     setCitySearchQuery('');
-    setCityOptions([]);
+    setCityOptions(new Set());
     setCitySearchOpen(false);
   };
 
