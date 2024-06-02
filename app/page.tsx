@@ -1,8 +1,7 @@
 import { TitlePanel } from '@/components/panels/title-panel';
 import { RoutesEnum, getRouteSettings } from '@/utils/routes-util';
 import { getServerSession } from 'next-auth/next';
-import { useSession } from 'next-auth/react';
-import { authOptions } from './api/auth/[...nextauth]/route';
+import { authOptions } from '@/utils/auth-utils';
 
 export default async function DashboardPage() {
   const currentRoute = RoutesEnum.DASHBOARD;

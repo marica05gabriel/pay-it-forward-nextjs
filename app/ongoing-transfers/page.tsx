@@ -1,5 +1,5 @@
 import { TitlePanel } from '@/components/panels/title-panel';
-import { TUKPage } from '@/ui/TUKPage';
+import { MainContainer } from '@/ui/MainContainer';
 import { RoutesEnum, getRouteSettings } from '@/utils/routes-util';
 import { ChatComponent } from '@/components/chat/ChatComponent';
 import { ChatProvider } from '../_components/chat/context-providers/ChatProvider';
@@ -21,9 +21,9 @@ export default async function OngoingTransfersPage() {
             title={routeSettings.label}
             routeSegments={routeSettings.segments}
           />
-          <TUKPage>
+          <MainContainer>
             <ChatComponent />
-          </TUKPage>
+          </MainContainer>
         </ChatProvider>
       </SocketProvider>
     </ContactsProvider>

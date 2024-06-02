@@ -1,5 +1,5 @@
 import { TitlePanel } from '@/app/_components/panels/title-panel';
-import { TUKPage } from '@/app/_ui/TUKPage';
+import { MainContainer } from '@/app/_ui/MainContainer';
 import { RoutesEnum, getRouteSettings } from '@/app/_utils/routes-util';
 import { EnrollBook } from '@/components/my-books/EnrollBook';
 
@@ -14,9 +14,9 @@ export default async function EnrollBookPage() {
         title={routeSettings.label}
         routeSegments={routeSettings.segments}
       />
-      <TUKPage>
+      <MainContainer>
         <EnrollBook />
-      </TUKPage>
+      </MainContainer>
     </>
   );
 }

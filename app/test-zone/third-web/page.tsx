@@ -1,6 +1,6 @@
 import { TitlePanel } from '@/components/panels/title-panel';
 import ThirdWebContainer from '@/components/thirdweb/ThirdWebContainer';
-import { TUKPage } from '@/ui/TUKPage';
+import { MainContainer } from '@/ui/MainContainer';
 import { RoutesEnum, getRouteSettings } from '@/utils/routes-util';
 
 export default function ThirdWebPage() {
@@ -14,9 +14,9 @@ export default function ThirdWebPage() {
         title={routeSettings.label}
         routeSegments={routeSettings.segments}
       />
-      {/* <TUKPage> */}
+      {/* <MainContainer> */}
       {/* <ThirdWebContainer />; */}
-      {/* </TUKPage> */}
+      {/* </MainContainer> */}
     </>
   );
 }

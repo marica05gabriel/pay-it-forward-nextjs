@@ -1,9 +1,8 @@
 import { TitlePanel } from '@/app/_components/panels/title-panel';
-import { authorizationCheck } from '@/app/_utils/auth-utils';
 import { ROUTES, RoutesEnum, getRouteSettings } from '@/app/_utils/routes-util';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/utils/auth-utils';
 import { ListBooks } from '@/components/my-books/ListBooks';
-import { TUKPage } from '@/ui/TUKPage';
+import { MainContainer } from '@/ui/MainContainer';
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
 
@@ -23,9 +22,9 @@ export default async function ListBooksPage() {
         title={routeSettings.label}
         routeSegments={routeSettings.segments}
       />
-      <TUKPage>
+      <MainContainer>
         <ListBooks />
-      </TUKPage>
+      </MainContainer>
     </>
   );
 }

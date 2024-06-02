@@ -1,5 +1,5 @@
 import { TitlePanel } from '../_components/panels/title-panel';
-import { TUKPage } from '../_ui/TUKPage';
+import { MainContainer } from '../_ui/MainContainer';
 import { OutBook, manageCsvBooks2 } from '../_utils/books-batch-generator';
 import { RoutesEnum, getRouteSettings } from '../_utils/routes-util';
 
@@ -16,7 +16,7 @@ export default async function TestZonePage() {
         title={routeSettings.label}
         routeSegments={routeSettings.segments}
       />
-      <TUKPage>
+      <MainContainer>
         <div>
           {books.map((book, index) => (
             <div key={index}>
@@ -39,7 +39,7 @@ export default async function TestZonePage() {
             </div>
           ))}
         </div>
-      </TUKPage>
+      </MainContainer>
     </>
   );
 }

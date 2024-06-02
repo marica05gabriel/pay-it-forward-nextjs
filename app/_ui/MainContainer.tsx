@@ -6,7 +6,7 @@ const isOverlapping = true;
 interface Props {
   children: ReactNode;
 }
-export const TUKPage = ({ children }: Props) => {
+export const MainContainer = ({ children }: Props) => {
   return (
     <div className='flex items-center justify-center'>
       <div className='container mx-auto px-6 text-black'>
