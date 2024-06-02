@@ -31,6 +31,7 @@ export const initializeThirdWebContext = () => {
   const chain = defineChain(sepolia);
   const wallet = createWallet('io.metamask');
   const thirdWebClient = createThirdwebClient({
+    // clientId: CLIENT_ID,
     clientId: 'CLIENT_ID',
   });
   const contract = getContract({

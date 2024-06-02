@@ -9,7 +9,7 @@ export const BookLocationFormContainer = ({ countryForm, cityForm }: Props) => (
   <div className='grid sm:grid-cols-2'>
     <div className='flex w-full items-center justify-center'>
       <div className='w-52 justify-center'>
-        <h1 className='text-center text-4xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white'>
+        <h1 className='text-center text-4xl font-extrabold leading-none tracking-tight text-gray-900'>
           Locatia curenta a cartii:
         </h1>
       </div>
