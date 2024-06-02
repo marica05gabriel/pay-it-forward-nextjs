@@ -5,14 +5,15 @@ import { RefObject, useRef } from 'react';
 export const Footer = () => {
   const avatarRef = useRef<HTMLUListElement>(null);
   function dropdownHandler(ref: RefObject<HTMLUListElement>) {
-    console.log('HERE 1');
     if (ref && ref.current) {
       ref.current.classList.toggle('hidden');
     }
   }
 
   const handleLogIn = () => {
-    signIn('keycloak');
+    signIn('keycloak', {
+      callbackUrl: 'http://localhost:3000/',
+    });
   };
 
   const handleLogOut = async () => {
@@ -66,9 +67,12 @@ export const Footer = () => {
             {status === 'loading' && (
               <p className='ml-2 text-sm text-gray-800'>Loading...</p>
             )}
-            {!session && (
-              <button onClick={handleLogIn}>
-                <p className='ml-2 text-sm text-gray-800'>Sign in</p>
+            {!session && status !== 'loading' && (
+              <button
+                className='h-12 w-20 border-spacing-2  rounded-lg border-2 border-slate-800 text-slate-800 hover:bg-slate-600 hover:font-medium hover:text-white'
+                onClick={handleLogIn}
+              >
+                <p className='m-auto text-center text-sm'>Sign in</p>
               </button>
             )}
             {session && (
@@ -87,8 +91,11 @@ export const Footer = () => {
                     {session.user?.name}
                   </p>
                 </button>
-                <button onClick={handleLogOut}>
-                  <p className='ml-2 text-sm text-gray-800'>Log out</p>
+                <button
+                  className='mx-2 h-12 w-20 border-spacing-2  rounded-lg border-2 border-slate-800 text-slate-800 hover:bg-slate-600 hover:font-medium hover:text-white'
+                  onClick={handleLogOut}
+                >
+                  <p className='m-auto text-center text-sm'>Log out</p>
                 </button>
               </>
             )}

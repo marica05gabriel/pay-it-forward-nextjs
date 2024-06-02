@@ -8,6 +8,7 @@ export enum RoutesEnum {
   BOOK_REQUESTS,
   BOOK_TRANSFERS,
   TEST_ZONE,
+  UNAUTHORIZED,
 }
 export const ROUTES = {
   [RoutesEnum.DASHBOARD]: '/',
@@ -17,6 +18,7 @@ export const ROUTES = {
   [RoutesEnum.BOOK_REQUESTS]: '/book-requests',
   [RoutesEnum.BOOK_TRANSFERS]: '/ongoing-transfers',
   [RoutesEnum.TEST_ZONE]: '/test-zone',
+  [RoutesEnum.UNAUTHORIZED]: '/unauthorized',
 };
 
 export const ROUTE_LABELS = {
@@ -27,6 +29,7 @@ export const ROUTE_LABELS = {
   [RoutesEnum.BOOK_REQUESTS]: 'Book requests',
   [RoutesEnum.BOOK_TRANSFERS]: 'Ongoing Transfers',
   [RoutesEnum.TEST_ZONE]: 'Test zone',
+  [RoutesEnum.UNAUTHORIZED]: 'UNAUTHORIZED',
 };
 
 export const ROUTE_ITEMS = [
