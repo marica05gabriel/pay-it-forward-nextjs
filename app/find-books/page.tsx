@@ -2,7 +2,7 @@ import { TitlePanel } from '@/components/panels/title-panel';
 import { BookListing } from '@/ui/BookListing';
 import { TUKPage } from '@/ui/TUKPage';
 import { RoutesEnum, getRouteSettings } from '@/utils/routes-util';
-import { TEST_BOOK_LIST } from '@/utils/testData';
+import { BookListingWrapper } from '../_components/book-listing/BookListingWrapper';
 
 export default async function FindBooksPage() {
   const currentRoute = RoutesEnum.FIND_BOOKS;
@@ -16,7 +16,12 @@ export default async function FindBooksPage() {
         routeSegments={routeSettings.segments}
       />
       <TUKPage>
-        <BookListing books={TEST_BOOK_LIST} />
+        <BookListingWrapper
+          bookListing={async (page: number, size: number) => {
+            'use server';
+            return <BookListing page={page} size={size} />;
+          }}
+        />
       </TUKPage>
     </>
   );
