@@ -26,12 +26,12 @@ export const ThirdWebContext = createContext<ThirdWebContextProps | null>(null);
 
 export const initializeThirdWebContext = () => {
   if (CLIENT_ID == undefined) {
-    throw Error('Third web CLIENT_ID is undefined. Check the credentials!');
+    // throw Error('Third web CLIENT_ID is undefined. Check the credentials!');
   }
   const chain = defineChain(sepolia);
   const wallet = createWallet('io.metamask');
   const thirdWebClient = createThirdwebClient({
-    clientId: CLIENT_ID,
+    clientId: 'CLIENT_ID',
   });
   const contract = getContract({
     client: thirdWebClient,

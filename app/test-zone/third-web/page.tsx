@@ -14,9 +14,9 @@ export default function ThirdWebPage() {
         title={routeSettings.label}
         routeSegments={routeSettings.segments}
       />
-      <TUKPage>
-        <ThirdWebContainer />;
-      </TUKPage>
+      {/* <TUKPage> */}
+      {/* <ThirdWebContainer />; */}
+      {/* </TUKPage> */}
     </>
   );
 }
