@@ -12,17 +12,8 @@ import {
   ChatMessageType,
 } from '@/app/_utils/types';
 import { useEffect, useState } from 'react';
+import { useChat } from '../context-providers/ChatProvider';
 
-interface Props {
-  activeChat: ActiveChat;
-  me: ChatContact;
-  sendMessage: (
-    fromId: string,
-    toId: string,
-    chatId: string,
-    message: string
-  ) => void;
-}
 type Message = {
   id: string;
   isLastMessage: boolean;
@@ -30,22 +21,23 @@ type Message = {
   avatar: string;
   type: ChatMessageType;
 };
-export const MainChatArea = ({ activeChat, me, sendMessage }: Props) => {
+export const MainChatArea = () => {
+  const { me, activeChat, sendMessage } = useChat();
   const [messages, setMessages] = useState<Message[]>([]);
 
   useEffect(() => {
-    const messages: Message[] = [];
-    if (activeChat.chat.messages.length <= 0) {
+    const result: Message[] = [];
+    if (!activeChat || activeChat.chat.messages.length <= 0) {
       return;
     }
 
     const contact = activeChat.contact;
-    const lastMessageId =
-      activeChat.chat.messages[activeChat.chat.messages.length - 1]?.id;
-    activeChat.chat.messages.forEach((message) => {
+    const messages = activeChat.chat.messages;
+    const lastMessageId = messages[messages.length - 1]?.id;
+    messages.forEach((message) => {
       const isLastMessage = lastMessageId === message.id;
       const avatar = message.type === 'incoming' ? contact.avatar : me.avatar;
-      messages.push({
+      result.push({
         id: message.id,
         message: message.message,
         isLastMessage: isLastMessage,
@@ -53,43 +45,53 @@ export const MainChatArea = ({ activeChat, me, sendMessage }: Props) => {
         type: message.type,
       });
     });
-    setMessages(messages);
+    setMessages(result);
   }, [activeChat]);
 
   return (
     <MainChatContainer>
-      <Header title={activeChat.contact.nickname} />
-      <ChatMessagesContainer>
-        {messages.map((message, index) => {
-          if (message.type === 'incoming') {
-            return (
-              <IncomingMessage
-                key={message.id}
-                id={message.id}
-                isLastMessage={message.isLastMessage}
-                message={message.message}
-                avatar={message.avatar}
-              />
-            );
-          } else {
-            return (
-              <OutgoingMessage
-                key={message.id}
-                id={message.id}
-                isLastMessage={message.isLastMessage}
-                message={message.message}
-                avatar={message.avatar}
-              />
-            );
-          }
-        })}
-      </ChatMessagesContainer>
-      <ChatInput
-        chatId={activeChat.chat.id}
-        myId={me.id}
-        contactId={activeChat.contact.id}
-        sendMessage={sendMessage}
-      />
+      {!(me && activeChat) ? (
+        <div className='flex h-[calc(100vh-172px)]'>
+          <div id='no_chat_selected' className='m-auto'>
+            No chat selected
+          </div>
+        </div>
+      ) : (
+        <>
+          <Header title={activeChat.contact.nickname} />
+          <ChatMessagesContainer>
+            {messages.map((message, index) => {
+              if (message.type === 'incoming') {
+                return (
+                  <IncomingMessage
+                    key={index}
+                    id={message.id}
+                    isLastMessage={message.isLastMessage}
+                    message={message.message}
+                    avatar={message.avatar}
+                  />
+                );
+              } else {
+                return (
+                  <OutgoingMessage
+                    key={index}
+                    id={message.id}
+                    isLastMessage={message.isLastMessage}
+                    message={message.message}
+                    avatar={message.avatar}
+                  />
+                );
+              }
+            })}
+          </ChatMessagesContainer>
+          <ChatInput
+            chatId={activeChat.chat.id}
+            myId={me.id}
+            contactId={activeChat.contact.id}
+            sendMessage={sendMessage}
+          />
+        </>
+      )}
     </MainChatContainer>
   );
 };

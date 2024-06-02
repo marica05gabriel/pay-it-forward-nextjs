@@ -1,12 +1,12 @@
 import clsx from 'clsx';
 
 interface Props {
-  id: string;
+  id: number;
   nickname: string;
   lastMessage: string;
   avatar: string;
   isActive: boolean;
-  setActiveChat: (chatId: string) => void;
+  setActiveChat: (chatId: number) => void;
 }
 export const ChatContactComponent = ({
   id,

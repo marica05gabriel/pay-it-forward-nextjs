@@ -11,14 +11,14 @@ export type BookType = {
 
 // Types used for Chat
 export type ChatContact = {
-  id: string;
+  id: number;
   nickname: string;
   avatar: string;
 };
 
 export type Chat = {
-  id: string;
-  contactId: string;
+  id: number;
+  contactId: number;
   messages: ChatMessage[];
 };
 
@@ -27,9 +27,22 @@ export type ActiveChat = {
   contact: ChatContact;
 };
 
+export const NO_ID = '-1';
 export type ChatMessageType = 'incoming' | 'outgoing';
 export type ChatMessage = {
   id: string;
+  chatId: number;
+  fromId: number;
+  toId: number;
   message: string;
   type: ChatMessageType;
+};
+
+export enum ValidationResultEnum {
+  OK,
+  FAILURE,
+}
+export type ValidationResult = {
+  status: ValidationResultEnum;
+  failures?: Array<string>;
 };

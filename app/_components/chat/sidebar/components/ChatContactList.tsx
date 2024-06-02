@@ -1,46 +1,54 @@
-import { Chat, ChatContact } from '@/utils/types';
 import { ContactListContainer } from '../container/ContactListContainer';
 import { ChatContactComponent } from './ChatContactComponent';
+import { useChat } from '../../context-providers/ChatProvider';
+import { useContacts } from '../../context-providers/ContactsProvider';
 
-interface Props {
-  chats: Map<string, Chat>;
-  contacts: Map<string, ChatContact>;
-  activeChatId: string | undefined;
-  setActiveChat: (chatId: string) => void;
+interface Data {
+  chatId: number;
+  isActive: boolean;
+  nickname: string;
+  avatar: string;
+  lastMessage: string;
 }
-export const ChatContactList = ({
-  chats,
-  contacts,
-  activeChatId,
-  setActiveChat,
-}: Props) => {
-  const prepareData = (contact: ChatContact, chat: Chat) => {
-    const chatId = chat.id;
-    const nickname = contact.nickname;
-    const avatar = contact.avatar;
+export const ChatContactList = () => {
+  const { chats, activeChat, setActiveChat } = useChat();
+  const { contacts } = useContacts();
+  const activeChatId = activeChat?.chat?.id;
 
-    let lastMessage = '';
-    if (chat.messages.length > 0) {
-      lastMessage = chat.messages[chat.messages.length - 1].message;
-    }
+  const prepareData = () => {
+    console.log(chats);
+    const data: Data[] = Array.from(chats.values())
+      .filter((chat) => {
+        return contacts.get(chat.contactId) !== undefined;
+      })
+      .map((chat) => {
+        let lastMessage = '';
+        if (chat.messages.length > 0) {
+          lastMessage = chat.messages[chat.messages.length - 1].message;
+        }
+        const contact = contacts.get(chat.contactId);
+        return {
+          chatId: chat.id,
+          isActive: activeChatId === chat.id,
+          nickname: contact!.nickname,
+          lastMessage,
+          avatar: contact!.avatar,
+        };
+      });
 
-    return {
-      chatId,
-      nickname,
-      avatar,
-      lastMessage,
-    };
+    return data;
   };
+
+  const handleToggleChat = (chatId: number) => {
+    setActiveChat(chatId);
+  };
+
   return (
     <ContactListContainer>
-      {Array.from(chats.values()).map((chat) => {
-        const contact = contacts.get(chat.contactId);
-        if (!contact) {
-          return <></>;
-        }
-
-        const data = prepareData(contact, chat);
-        return (
+      {!(chats && contacts) ? (
+        <div>Loading</div>
+      ) : (
+        prepareData().map((data) => (
           <ChatContactComponent
             key={data.chatId}
             id={data.chatId}
@@ -48,10 +56,10 @@ export const ChatContactList = ({
             nickname={data.nickname}
             avatar={data.avatar}
             lastMessage={data.lastMessage}
-            setActiveChat={setActiveChat}
+            setActiveChat={handleToggleChat}
           />
-        );
-      })}
+        ))
+      )}
     </ContactListContainer>
   );
 };

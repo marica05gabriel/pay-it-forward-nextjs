@@ -2,15 +2,10 @@ import { ChangeEvent, FormEvent, useState } from 'react';
 import { isEmpty } from 'lodash';
 
 interface Props {
-  chatId: string;
-  myId: string;
-  contactId: string;
-  sendMessage: (
-    fromId: string,
-    toId: string,
-    chatId: string,
-    message: string
-  ) => void;
+  chatId: number;
+  myId: number;
+  contactId: number;
+  sendMessage: (toId: number, chatId: number, message: string) => void;
 }
 export const ChatInput = ({ chatId, myId, contactId, sendMessage }: Props) => {
   const [message, setMessage] = useState<string>('');
@@ -26,7 +21,7 @@ export const ChatInput = ({ chatId, myId, contactId, sendMessage }: Props) => {
     }
 
     setMessage('');
-    sendMessage(myId, contactId, chatId, message);
+    sendMessage(chatId, contactId, message);
   };
 
   return (
