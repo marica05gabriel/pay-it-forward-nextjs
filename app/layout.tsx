@@ -3,6 +3,7 @@ import { Navigation } from '@/components/navigation/Navigation';
 import { ThirdWebContextProvider } from '@/utils/context-providers';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { SessionProviderWrapper } from '@/components/providers/SessionProviderWrapper';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -17,13 +18,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en'>
-      <body className={inter.className}>
-        <ThirdWebContextProvider>
-          <Navigation />
-          <div id='page-container'>{children}</div>
-        </ThirdWebContextProvider>
-      </body>
-    </html>
+    <SessionProviderWrapper>
+      <html lang='en'>
+        <body className={inter.className}>
+          <ThirdWebContextProvider>
+            <Navigation />
+            <div id='page-container'>{children}</div>
+          </ThirdWebContextProvider>
+        </body>
+      </html>
+    </SessionProviderWrapper>
   );
 }

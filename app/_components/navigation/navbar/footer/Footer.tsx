@@ -1,3 +1,5 @@
+'use client';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import { RefObject, useRef } from 'react';
 
 export const Footer = () => {
@@ -8,6 +10,22 @@ export const Footer = () => {
       ref.current.classList.toggle('hidden');
     }
   }
+
+  const handleLogIn = () => {
+    signIn('keycloak');
+  };
+
+  const handleLogOut = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'GET' });
+      signOut({ callbackUrl: '/' });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const { data: session, status } = useSession();
+
   return (
     <div className='hidden h-full items-center justify-end xl:flex'>
       <div className='flex h-full items-center'>
@@ -45,18 +63,35 @@ export const Footer = () => {
             aria-haspopup='true'
             className='relative flex w-full cursor-pointer items-center justify-end'
           >
-            <button
-              aria-haspopup='true'
-              onClick={() => dropdownHandler(avatarRef)}
-              className='flex items-center rounded focus:outline-none focus:ring-2 focus:ring-gray-800 focus:ring-offset-2'
-            >
-              <img
-                className='h-10 w-10 rounded-full object-cover'
-                src='https://tuk-cdn.s3.amazonaws.com/assets/components/sidebar_layout/sl_1.png'
-                alt='avatar'
-              />
-              <p className='ml-2 text-sm text-gray-800'>Jane Doe</p>
-            </button>
+            {status === 'loading' && (
+              <p className='ml-2 text-sm text-gray-800'>Loading...</p>
+            )}
+            {!session && (
+              <button onClick={handleLogIn}>
+                <p className='ml-2 text-sm text-gray-800'>Sign in</p>
+              </button>
+            )}
+            {session && (
+              <>
+                <button
+                  aria-haspopup='true'
+                  onClick={() => dropdownHandler(avatarRef)}
+                  className='flex items-center rounded focus:outline-none focus:ring-2 focus:ring-gray-800 focus:ring-offset-2'
+                >
+                  <img
+                    className='h-10 w-10 rounded-full object-cover'
+                    src='https://tuk-cdn.s3.amazonaws.com/assets/components/sidebar_layout/sl_1.png'
+                    alt='avatar'
+                  />
+                  <p className='ml-2 text-sm text-gray-800'>
+                    {session.user?.name}
+                  </p>
+                </button>
+                <button onClick={handleLogOut}>
+                  <p className='ml-2 text-sm text-gray-800'>Log out</p>
+                </button>
+              </>
+            )}
 
             <ul
               ref={avatarRef}
