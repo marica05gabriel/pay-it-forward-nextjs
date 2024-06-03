@@ -1,13 +1,22 @@
+'use client';
 import Image from 'next/image';
 import { InputForm } from './InputForm';
-import { Book } from './EnrollBookForm';
+import { Book } from '@/app/_components/_services/types';
 
-export const BookInfoForm = ({ authors, imageUrl, isbn13, title }: Book) => {
+interface Props {
+  book: Book;
+}
+export const BookInfoForm = ({ book }: Props) => {
+  const { isbn, title, authors, imageUrl } = book;
+
   return (
-    <div className='mt-10 grid gap-x-6 gap-y-8 sm:grid-cols-2'>
+    <div
+      id={`book_info_form_${isbn}`}
+      className='mt-10 grid gap-x-6 gap-y-8 sm:grid-cols-2'
+    >
       <div className='flex w-full flex-1 flex-col items-center justify-center gap-y-4'>
-        <InputForm label='Title' input={title} />
-        <InputForm label='Author(s)' input={authors} />
+        <InputForm label='Title' value={title} />
+        <InputForm label='Author(s)' value={authors} />
       </div>
       <div className='flex w-full justify-center'>
         <div className='w-52 justify-center'>

@@ -6,25 +6,19 @@ const LOCATION_URL = `${baseUrl}/location/city`;
 export async function GET(req: NextRequest) {
   const country = req.nextUrl.searchParams.get('country');
   const city = req.nextUrl.searchParams.get('city');
-  console.log(country);
-  console.log(city);
 
   const response = await fetch(
     `${LOCATION_URL}?country=${country}&city=${city}`
   );
   if (response.status == 204) {
-    return NextResponse.json({
-      locations: [
-        {
-          id: -1,
-          country: '',
-          city: '',
-        },
-      ],
-    });
+    return NextResponse.json([
+      {
+        id: -1,
+        country: '',
+        city: '',
+      },
+    ]);
   }
-  const data = await response.json();
-
-  console.log(data);
-  return NextResponse.json({ locations: data });
+  const locations = await response.json();
+  return NextResponse.json(locations);
 }

@@ -1,62 +1,66 @@
 'use client';
+import { useEnrollBook } from '@/app/_components/_services/useEnrollBook';
 import { BookInfoForm } from './BookInfoForm';
 import { SearchISBNForm } from './SearchISBNForm';
 import { SelectLocationForm } from './SelectLocationForm';
-import { MouseEvent, useState } from 'react';
+import { useState } from 'react';
+import clsx from 'clsx';
+import { useSearchBook } from '@/app/_components/_services/useSearchBook';
+import { Loading } from '../Loading';
+import { BookLocation, NO_BOOK } from '@/app/_components/_services/types';
+import { LoadingComponent } from '../LoadingComponent';
 
-export type Book = {
-  authors: string;
-  imageUrl: string;
-  isbn13: string;
-  title: string;
-};
-export type BookLocation = {
-  id: number;
-  country: string;
-  city: string;
-};
-const NO_BOOK: Book = {
-  authors: '',
-  imageUrl: '/no-book-cover-available.png',
-  isbn13: '',
-  title: '',
-};
-const NO_LOCATION = {
-  id: -1,
-  country: '',
-  city: '',
-};
 export const EnrollBookForm = () => {
-  const [loading, setLoading] = useState(false);
-  const [book, setBook] = useState<Book>(NO_BOOK);
-  const [location, setLocation] = useState();
+  const [location, setLocation] = useState<BookLocation>();
+  const {
+    loading: searchLoading,
+    error: searchError,
+    responseData: book,
+    submitForm: search,
+  } = useSearchBook();
 
-  const handleOnSearch = async (
-    e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>,
-    isbn: string
-  ) => {
-    setLoading(true);
-    const response = await fetch(`/api/book/by-isbn?isbn13=${isbn}`, {
-      method: 'GET',
-    });
-    const data = await response.json();
-    setBook(data.book);
-    setLoading(false);
+  const {
+    loading: enrollLoading,
+    error: enrollError,
+    responseData: enrollResponse,
+    submitForm: enroll,
+  } = useEnrollBook();
+
+  const handleOnSearch = (isbn: string) => {
+    search(isbn);
+  };
+  const handleSubmit = () => {
+    if (!(book && location)) {
+      return;
+    }
+    enroll(book, location);
+    console.log(enrollResponse);
   };
 
   return (
-    <div className='p-10'>
-      <SearchISBNForm onSearch={handleOnSearch} disabled={loading} />
+    <div className='flex flex-col  justify-center p-10'>
+      <SearchISBNForm onSearch={handleOnSearch} disabled={searchLoading} />
 
       <div className='grid grid-cols-1 grid-rows-2 gap-y-2 divide-y '>
-        <BookInfoForm
-          isbn13={book.isbn13}
-          title={book.title}
-          authors={book.authors}
-          imageUrl={book.imageUrl}
-        />
-        <SelectLocationForm />
+        {searchLoading ? <LoadingComponent /> : <BookInfoForm book={book} />}
+
+        <SelectLocationForm setLocation={setLocation} />
       </div>
+
+      <button
+        type='submit'
+        className={clsx(
+          book &&
+            location &&
+            'w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800',
+          !(book && location) &&
+            'cursor-not-allowed rounded-md bg-gray-300 px-4 py-2 opacity-50'
+        )}
+        onClick={handleSubmit}
+        disabled={!(book && location)}
+      >
+        Submit
+      </button>
     </div>
   );
 };

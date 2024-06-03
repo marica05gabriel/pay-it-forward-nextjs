@@ -1,4 +1,7 @@
+import { Loading } from '../Loading';
+
 interface Props {
+  loading: boolean;
   selectedValue: string;
   isSearchOpen: boolean;
   toggleSearch: () => void;
@@ -8,6 +11,7 @@ interface Props {
   handleSetValue: (country: string) => void;
 }
 export const SelectForm = ({
+  loading,
   selectedValue,
   isSearchOpen,
   toggleSearch,
@@ -49,15 +53,21 @@ export const SelectForm = ({
         value={searchQuery}
         onChange={handleInputChange}
       />
-      {Array.from(options).map((option, index) => (
-        <div
-          className='hover:bg-gray-500'
-          key={index}
-          onClick={(e) => handleSetValue(option)}
-        >
-          {option}
-        </div>
-      ))}
+      {loading ? (
+        <Loading />
+      ) : (
+        <>
+          {Array.from(options).map((option, index) => (
+            <div
+              className='hover:bg-gray-500'
+              key={index}
+              onClick={(e) => handleSetValue(option)}
+            >
+              {option}
+            </div>
+          ))}
+        </>
+      )}
     </div>
   </div>
 );

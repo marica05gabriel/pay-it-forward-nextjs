@@ -1,12 +1,10 @@
 'use client';
 
+import clsx from 'clsx';
 import { ChangeEvent, MouseEvent, useState } from 'react';
 
 interface Props {
-  onSearch: (
-    e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>,
-    isbn: string
-  ) => void;
+  onSearch: (isbn: string) => void;
   disabled: boolean;
 }
 export const SearchISBNForm = ({ onSearch, disabled }: Props) => {
@@ -15,6 +13,13 @@ export const SearchISBNForm = ({ onSearch, disabled }: Props) => {
   const handelOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     setIsbn(e.target.value);
+  };
+
+  const handleOnSearch = (
+    e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
+  ) => {
+    e.preventDefault();
+    onSearch(isbn);
   };
 
   return (
@@ -40,13 +45,19 @@ export const SearchISBNForm = ({ onSearch, disabled }: Props) => {
           maxLength={13}
           className='bg-gray-300 text-gray-700 focus:outline-none'
           required
+          value={isbn}
         />
       </div>
       <div className='mt-5 flex justify-center'>
         <button
-          disabled={disabled}
-          onClick={(e) => onSearch(e, isbn)}
-          className='w-1/4 rounded-md border bg-gray-800 p-2 text-white'
+          disabled={disabled || isbn.length < 13}
+          onClick={handleOnSearch}
+          className={clsx(
+            'w-1/4 rounded-md border bg-gray-800 p-2 text-white',
+            disabled ||
+              (isbn.length < 13 &&
+                'cursor-not-allowed rounded-md bg-gray-300 px-4 py-2 opacity-50')
+          )}
         >
           Search
         </button>
