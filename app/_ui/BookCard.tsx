@@ -5,13 +5,22 @@ interface BookCardProps {
   book: BookType;
 }
 export const BookCard = ({ book }: BookCardProps) => {
-  const { id, title, authors, description, categories, image, isbn13, isbn10 } =
-    book;
+  const {
+    id,
+    title,
+    authors,
+    description,
+    categories,
+    image,
+    isbn13,
+    isbn10,
+    imageUrl,
+  } = book;
 
   return (
     <div id={`book-${id}`} className='rounded-lg border bg-white p-4'>
       <Image
-        src={image}
+        src={imageUrl ?? '/no-book-cover-available.png'}
         width={300}
         height={100}
         alt='Placeholder Image'

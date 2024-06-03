@@ -18,10 +18,6 @@ export const authOptions: AuthOptions = {
       const now = Math.floor(Date.now() / 1000);
       if (account) {
         console.log('[JWT callback] First time after sign in.');
-        console.log('Account');
-        console.log(account);
-        console.log('Token');
-        console.log(token);
         console.log(
           'Expires at: ',
           new Date(Number(account.expires_at) * 1000)
@@ -44,7 +40,6 @@ export const authOptions: AuthOptions = {
         try {
           const newToken = await handleRefreshToken(token);
           console.info('Token refreshed successfully.');
-          console.info(newToken);
           return newToken;
         } catch (error) {
           console.error('Error wile refreshing access token!');
@@ -77,7 +72,6 @@ const handleRefreshToken = async (token: JWT) => {
     grant_type: 'refresh_token',
     refresh_token: String(token.refresh_token),
   });
-  console.log(body);
   const response = await fetch(`${process.env.REFRESH_TOKEN_URL}`, {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: body,
@@ -86,7 +80,6 @@ const handleRefreshToken = async (token: JWT) => {
 
   if (!response.ok) {
     console.log('Refresh token error!');
-    console.error(response);
     throw Error('Refresh token error!');
   }
 

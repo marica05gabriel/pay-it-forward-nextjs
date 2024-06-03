@@ -1,43 +1,42 @@
 import clsx from 'clsx';
+import Link from 'next/link';
 
 interface Props {
-  currentPage: number; // starts from 0
+  currentPage: number;
   pages: number[];
-  pageSize?: number; // number of elements per page
-  onPrevPage: () => void;
-  onNextPage: () => void;
-  onPageChange: (newPage: number) => void;
+  size: number;
+  redirectUrl: string;
 }
 
 export const PaginationComponent = ({
   currentPage,
   pages,
-  onPrevPage,
-  onNextPage,
-  onPageChange,
+  size,
+  redirectUrl,
 }: Props) => (
   <div className='flex justify-center py-5'>
     <nav aria-label='Page navigation'>
       <ul className='list-style-none flex'>
         <li
+          key={`go_to_page${currentPage - 1}`}
           className={clsx(
             'page-item cursor-pointer',
             currentPage === pages[0] && 'disabled cursor-not-allowed'
           )}
         >
-          <a
+          <Link
+            href={`${redirectUrl}?page=${currentPage - 1}&size=${size}`}
             className={clsx(
               'page-link relative block rounded border-0 bg-transparent px-3 py-1.5  outline-none transition-all duration-300  focus:shadow-none',
               currentPage === pages[0] && ' pointer-events-none text-gray-500',
               currentPage !== pages[0] &&
                 ' text-gray-800 hover:bg-gray-200 hover:text-gray-800'
             )}
-            onClick={onPrevPage}
             tabIndex={-1}
             aria-disabled={currentPage === pages[0]}
           >
             Previous
-          </a>
+          </Link>
         </li>
         {pages.map((page, index) => (
           <li
@@ -47,7 +46,9 @@ export const PaginationComponent = ({
             )}
             key={index}
           >
-            <a
+            <Link
+              key={page}
+              href={`${redirectUrl}?page=${page}&size=${size}`}
               className={clsx(
                 'page-link relative block rounded  border-0 px-3 py-1.5 outline-none transition-all  duration-300',
                 page !== currentPage &&
@@ -55,11 +56,10 @@ export const PaginationComponent = ({
                 page === currentPage &&
                   ' bg-blue-600  text-white shadow-md  hover:bg-blue-600 hover:text-white focus:shadow-md'
               )}
-              onClick={() => onPageChange(page)}
             >
               {page}
               {page === currentPage && <span className='visually-hidden' />}
-            </a>
+            </Link>
           </li>
         ))}
 
@@ -70,7 +70,8 @@ export const PaginationComponent = ({
               'disabled cursor-not-allowed'
           )}
         >
-          <a
+          <Link
+            href={`${redirectUrl}?page=${currentPage + 1}&size=${size}`}
             className={clsx(
               'page-link relative block rounded border-0 bg-transparent px-3 py-1.5  outline-none transition-all duration-300  focus:shadow-none',
               currentPage === pages[pages.length - 1] &&
@@ -78,11 +79,10 @@ export const PaginationComponent = ({
               currentPage !== pages[pages.length - 1] &&
                 ' text-gray-800 hover:bg-gray-200 hover:text-gray-800'
             )}
-            onClick={onNextPage}
             aria-disabled={currentPage === pages[pages.length - 1]}
           >
             Next
-          </a>
+          </Link>
         </li>
       </ul>
     </nav>

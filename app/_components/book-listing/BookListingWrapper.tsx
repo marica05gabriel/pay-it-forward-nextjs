@@ -31,27 +31,27 @@ export const BookListingWrapper = ({ bookListing }: Props) => {
     return (
       <>
         <div className='justify-center py-20 text-center'>Loading</div>
-
+        {/* 
         <PaginationComponent
           currentPage={formattedPage}
           pages={computePages}
           onPrevPage={() => onPageChange(page - 1)}
           onNextPage={() => onPageChange(page + 1)}
           onPageChange={(newPage: number) => onPageChange(newPage - 1)}
-        />
+        /> */}
       </>
     );
   }
   return (
     <>
       {!!bookListingComponent && bookListingComponent}
-      <PaginationComponent
+      {/* <PaginationComponent
         currentPage={formattedPage}
         pages={computePages}
         onPrevPage={() => onPageChange(page - 1)}
         onNextPage={() => onPageChange(page + 1)}
         onPageChange={(newPage: number) => onPageChange(newPage - 1)}
-      />
+      /> */}
     </>
   );
 };
