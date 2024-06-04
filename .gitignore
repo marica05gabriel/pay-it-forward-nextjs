@@ -41,3 +41,4 @@ next-env.d.ts
 
 # Test wallets secret data
 .test-wallets
+certificates

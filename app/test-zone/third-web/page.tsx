@@ -14,9 +14,9 @@ export default function ThirdWebPage() {
         title={routeSettings.label}
         routeSegments={routeSettings.segments}
       />
-      {/* <MainContainer> */}
-      {/* <ThirdWebContainer />; */}
-      {/* </MainContainer> */}
+      <MainContainer>
+        <ThirdWebContainer />;
+      </MainContainer>
     </>
   );
 }

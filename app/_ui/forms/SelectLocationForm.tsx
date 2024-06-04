@@ -69,6 +69,7 @@ export const SelectLocationForm = ({ setLocation }: Props) => {
         <SelectForm
           loading={loading}
           selectedValue={country}
+          defaultValue='Select country'
           searchQuery={countrySearchQuery}
           options={countryOptions}
           isSearchOpen={isCountrySearchOpen}
@@ -83,6 +84,7 @@ export const SelectLocationForm = ({ setLocation }: Props) => {
         <SelectForm
           loading={loading}
           selectedValue={city}
+          defaultValue='Select city'
           searchQuery={citySearchQuery}
           options={cityOptions}
           isSearchOpen={isCitySearchOpen}

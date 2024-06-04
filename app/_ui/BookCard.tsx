@@ -1,10 +1,12 @@
+import { ReactNode } from 'react';
 import { BookType } from '../_utils/types';
 import Image from 'next/image';
 
 interface BookCardProps {
   book: BookType;
+  additionalContent?: ReactNode;
 }
-export const BookCard = ({ book }: BookCardProps) => {
+export const BookCard = ({ book, additionalContent }: BookCardProps) => {
   const {
     id,
     title,
@@ -18,32 +20,28 @@ export const BookCard = ({ book }: BookCardProps) => {
   } = book;
 
   return (
-    <div id={`book-${id}`} className='rounded-lg border bg-white p-4'>
-      <Image
-        src={imageUrl ?? '/no-book-cover-available.png'}
-        width={300}
-        height={100}
-        alt='Placeholder Image'
-        className='w-full rounded-md object-cover'
-        priority={false}
-        placeholder='blur'
-        blurDataURL='/public/no-book-cover-available.png'
-      />
+    <div
+      id={`book-${id}`}
+      className='flex flex-col rounded-lg border bg-white p-4'
+    >
+      <div className='h-72'>
+        <Image
+          src={imageUrl ?? '/no-book-cover-available.png'}
+          width={200}
+          height={70}
+          alt='Placeholder Image'
+          className='h-full w-full rounded-md object-cover'
+          priority={false}
+          placeholder='blur'
+          blurDataURL='/public/no-book-cover-available.png'
+        />
+      </div>
       <div className='h-80'>
-        <div className='h-60 px-1 py-4'>
-          <div className='text-l mb-2 h-20 font-bold text-gray-900'>
+        <div className='flex h-60 flex-col items-center px-1 py-4 align-middle'>
+          <div className='text-l mb-2 h-20 overflow-hidden font-bold text-gray-900'>
             {title}
           </div>
           <div className='text-base text-gray-700'>
-            {title && (
-              <p>
-                <span>
-                  <b>Title: </b>
-                </span>
-                <span>{title}</span>
-              </p>
-            )}
-
             {authors && (
               <p>
                 <span>
@@ -72,6 +70,7 @@ export const BookCard = ({ book }: BookCardProps) => {
             )}
           </div>
         </div>
+        {!!additionalContent && additionalContent}
         <div className='height-auto px-1 py-10'>
           <a href='#' className='text-blue-500 hover:underline'>
             Read More

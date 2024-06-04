@@ -14,6 +14,7 @@ import {
   DEFAULT_PAGE_SIZE,
   computePagesToDisplay,
 } from '../_utils/pagination-utils';
+import { SelectLocationForm } from './SelectLocationForm';
 
 const FIND_BOOKS_URL = `${process.env.RESOURCE_SERVER_URL_BOOK}`;
 
@@ -30,13 +31,17 @@ export default async function FindBooksPage({
 
   const page = getParamOrDefault(searchParams, 'page', DEFAULT_PAGE_NUMBER);
   const size = getParamOrDefault(searchParams, 'size', DEFAULT_PAGE_SIZE);
+  const locationId = getParamOrDefault(searchParams, 'locationId', -1);
   console.log('FETCH TO: ' + FIND_BOOKS_URL);
 
   const session = await getServerSession(authOptions);
   const username = session?.user?.name ?? '';
+  const locationSearchParam =
+    locationId != -1 ? `&locationId=${locationId}` : '';
 
+  console.log(username, locationSearchParam);
   const response = await fetch(
-    `${FIND_BOOKS_URL}?page=${page - 1}&size=${size}`,
+    `${FIND_BOOKS_URL}?page=${page - 1}&size=${size}${locationSearchParam}`,
     {
       method: 'GET',
       headers: {
@@ -60,7 +65,11 @@ export default async function FindBooksPage({
         routeSegments={routeSettings.segments}
       />
       <MainContainer>
-        <ListMyBooks books={books} />
+        <SelectLocationForm />
+        <ListMyBooks
+          books={books}
+          additionalContent={(bookId) => <div>Additional {bookId}</div>}
+        />
         <PaginationComponent
           currentPage={page}
           pages={computePagesToDisplay(page, totalPages)}

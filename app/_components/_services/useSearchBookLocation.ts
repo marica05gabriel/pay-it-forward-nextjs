@@ -74,6 +74,7 @@ export const useSearchBookLocation = () => {
     city,
     countryOptions: new Set(countryOptions),
     cityOptions: new Set(cityOptions),
+    locations,
     setCountry,
     setCity,
     searchCountry,

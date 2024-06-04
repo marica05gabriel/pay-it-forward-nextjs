@@ -12,13 +12,16 @@ export const Footer = () => {
 
   const handleLogIn = () => {
     signIn('keycloak', {
-      callbackUrl: 'http://localhost:3000/',
+      // callbackUrl: 'http://localhost:3000/',
+      callbackUrl: process.env.NEXT_PUBLIC_LOGIN_CALLBACK_URL,
     });
   };
 
   const handleLogOut = async () => {
     try {
-      await fetch('/api/auth/logout', { method: 'GET' });
+      const response = await fetch('/api/auth/logout', { method: 'GET' });
+      console.log('HEREREE');
+      console.log(response);
       signOut({ callbackUrl: '/' });
     } catch (error) {
       console.error(error);
@@ -64,7 +67,7 @@ export const Footer = () => {
             aria-haspopup='true'
             className='relative flex w-full cursor-pointer items-center justify-end'
           >
-            {status === 'loading' && (
+            {status === 'loading' && session && (
               <p className='ml-2 text-sm text-gray-800'>Loading...</p>
             )}
             {!session && status !== 'loading' && (

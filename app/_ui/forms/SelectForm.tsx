@@ -1,8 +1,11 @@
+import _ from 'lodash';
 import { Loading } from '../Loading';
+import clsx from 'clsx';
 
 interface Props {
   loading: boolean;
   selectedValue: string;
+  defaultValue: string;
   isSearchOpen: boolean;
   toggleSearch: () => void;
   searchQuery: string;
@@ -13,6 +16,7 @@ interface Props {
 export const SelectForm = ({
   loading,
   selectedValue,
+  defaultValue,
   isSearchOpen,
   toggleSearch,
   searchQuery,
@@ -26,7 +30,9 @@ export const SelectForm = ({
       onClick={toggleSearch}
       className='inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-100'
     >
-      <span className='mr-2'>{selectedValue}</span>
+      <span className='mr-2'>
+        {_.isEmpty(selectedValue) ? defaultValue : selectedValue}
+      </span>
       <svg
         xmlns='http://www.w3.org/2000/svg'
         className='ml-2 mr-1 h-5 w-5'
@@ -41,7 +47,10 @@ export const SelectForm = ({
     </button>
     <div
       id='dropdown-menu'
-      className='absolute right-0 mt-2 w-full space-y-1 rounded-md bg-white p-1 shadow-lg ring-1 ring-black ring-opacity-5'
+      className={clsx(
+        'absolute right-0 mt-2 w-full space-y-1 rounded-md bg-white p-1 shadow-lg ring-1 ring-black ring-opacity-5',
+        isSearchOpen && 'z-50'
+      )}
       hidden={!isSearchOpen}
     >
       <input

@@ -11,6 +11,11 @@ export async function GET() {
     console.log(url);
     try {
       const response = await fetch(url, { method: 'GET' });
+      if (response.status === 200) {
+        console.log('Logout successfully. Keycloack token invalidated!');
+      } else {
+        console.error(response);
+      }
     } catch (error) {
       console.error(error);
       // @ts-ignore
