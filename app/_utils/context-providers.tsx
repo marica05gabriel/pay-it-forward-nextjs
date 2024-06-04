@@ -5,6 +5,7 @@ import {
   PAPER_BOOK_BASE_CONTRACT_ADDRESS,
 } from '@/components/thirdweb/thirdweb-utils';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ThirdwebProvider } from '@thirdweb-dev/react';
 import { createContext, useContext } from 'react';
 import {
   ContractOptions,
@@ -53,10 +54,10 @@ export const ThirdWebContextProvider = ({ children }: Props) => {
   return (
     <QueryClientProvider client={queryClient}>
       <ThirdWebContext.Provider value={initialState}>
-        {children}
+        <ThirdwebProvider>{children}</ThirdwebProvider>
       </ThirdWebContext.Provider>
     </QueryClientProvider>
   );
 };
-
+// 0xa24c6a474b3239f1876deacf32b69983051c6c4ce3ea6d96cbe206d9822041aa56eb7542a9c0d64bf9db709c9f5a2f450bc937d2517ba5cb5db2a9151c5e9a101b
 export const useThirdWebContext = () => useContext(ThirdWebContext);
