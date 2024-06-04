@@ -8,7 +8,8 @@ export default async function TestZonePage() {
   const routeSettings = getRouteSettings(currentRoute);
   console.log(RoutesEnum[currentRoute]);
 
-  const books: OutBook[] = await manageCsvBooks2();
+  // const books: OutBook[] = await manageCsvBooks2();
+  const books: OutBook[] = [];
 
   return (
     <>
