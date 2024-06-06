@@ -12,7 +12,7 @@ export const getContacts = async (userId: number) => {
       method: 'GET',
       mode: 'cors',
       headers: {
-        'Coontent-Type': 'application/json',
+        'Content-Type': 'application/json',
       },
     }
   );

@@ -45,7 +45,7 @@ export default async function FindBooksPage({
     {
       method: 'GET',
       headers: {
-        'Coontent-Type': 'application/json',
+        'Content-Type': 'application/json',
         username,
       },
     }
@@ -72,8 +72,8 @@ export default async function FindBooksPage({
           additionalContent={(bookId) => (
             <RequestBookButton
               key={bookId}
-              disabled={bookId % 2 == 0}
-              label='Request book'
+              disabled={false}
+              label='Request this book'
               onSubmit={async (walletAddress) => {
                 'use server';
                 const response = await handleRequestBook(bookId, walletAddress);

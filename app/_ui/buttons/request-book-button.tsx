@@ -22,14 +22,16 @@ export const RequestBookButton = ({ label, onSubmit, disabled }: Props) => {
    *
    * */
 
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { pending } = useFormStatus();
   const [successfullyRequested, setSuccessfullyRequested] = useState(false);
 
   const thirdWebContext = useThirdWebContext();
+
+  const connect = useConnect();
   const metamaskConfig = metamaskWallet();
   const address = useAddress();
-  const connect = useConnect();
 
   const handleSubmit = async () => {
     if (disabled) {
@@ -41,24 +43,32 @@ export const RequestBookButton = ({ label, onSubmit, disabled }: Props) => {
     if (address) {
       connectedAddress = address;
     } else {
-      const chainId =
-        thirdWebContext && thirdWebContext.chain
-          ? thirdWebContext.chain.id
-          : sepolia.id;
-      const wallet = await connect(metamaskConfig, { chainId });
-      connectedAddress = await wallet.getAddress();
+      try {
+        const chainId =
+          thirdWebContext && thirdWebContext.chain
+            ? thirdWebContext.chain.id
+            : sepolia.id;
+        const wallet = await connect(metamaskConfig, { chainId });
+        connectedAddress = await wallet.getAddress();
+      } catch (error) {
+        console.error(error);
+        setError('Something went wrong while connecting to metamask wallet!');
+        setLoading(false);
+        return;
+      }
     }
-
     const response = await onSubmit(connectedAddress);
 
     if (response.status === 'ok') {
       setSuccessfullyRequested(true);
+      setLoading(false);
+
       // keep button disabled
       return;
     }
-
     setLoading(false);
   };
+
   return (
     <form action={handleSubmit} className='flex justify-center'>
       {loading || pending ? (
@@ -69,7 +79,7 @@ export const RequestBookButton = ({ label, onSubmit, disabled }: Props) => {
           disabled={pending || disabled || loading}
           className={clsx(
             'group relative mb-2 me-2 inline-flex items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 p-0.5 text-sm font-medium text-gray-900 hover:text-white  group-hover:from-purple-600 group-hover:to-blue-500 dark:text-white dark:focus:ring-blue-800',
-            (pending || disabled || loading) &&
+            (pending || disabled || loading || successfullyRequested) &&
               'cursor-not-allowed rounded-md bg-gray-300 opacity-50'
           )}
         >

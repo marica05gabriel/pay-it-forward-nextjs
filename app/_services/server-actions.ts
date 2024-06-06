@@ -8,7 +8,6 @@ const TRANSFER_REQUESTS_URL = `${process.env.RESOURCE_SERVER_URL_TRANSFER}/reque
 const TRANSFERS_URL = `${process.env.RESOURCE_SERVER_URL_TRANSFER}`;
 const FIND_BOOKS_URL = `${process.env.RESOURCE_SERVER_URL_BOOK}`;
 
-// export const handleRequestBook = async (bookId: number, toId, toPublicId) => {
 export const handleRequestBook = async (
   bookId: number,
   connectedWalletAddress: string
@@ -24,7 +23,7 @@ export const handleRequestBook = async (
   const response = await fetch(`${FIND_BOOKS_URL}/${bookId}`, {
     method: 'GET',
     headers: {
-      'Coontent-Type': 'application/json',
+      'Content-Type': 'application/json',
     },
   });
   const book: BookType = await response.json();

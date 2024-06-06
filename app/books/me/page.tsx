@@ -40,7 +40,7 @@ export default async function MyBooksPage({
     {
       method: 'GET',
       headers: {
-        'Coontent-Type': 'application/json',
+        'Content-Type': 'application/json',
         username,
       },
     }
