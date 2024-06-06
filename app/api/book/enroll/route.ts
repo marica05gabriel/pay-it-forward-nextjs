@@ -10,6 +10,8 @@ export async function POST(req: NextRequest) {
 
   const requestBody = {
     userId: body.userId,
+    userPublicId: body.userPublicId,
+    bookPublicId: body.bookPublicId,
     isbn13: body.isbn,
     country: body.country,
     city: body.city,

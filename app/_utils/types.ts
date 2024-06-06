@@ -1,5 +1,6 @@
 export type BookType = {
   id: number;
+  publicId?: string;
   title: string;
   authors: string;
   image: string;
@@ -8,6 +9,9 @@ export type BookType = {
   isbn13?: string;
   isbn10?: string;
   imageUrl?: string;
+  currentOwner?: 'gmarica';
+  currentOwnerPublicId?: 'gmarica';
+  currentLocation?: { id: 2; country: 'Romania'; city: 'Cluj-Napoca' };
 };
 
 // Types used for Chat

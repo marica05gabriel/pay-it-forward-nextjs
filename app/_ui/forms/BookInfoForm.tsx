@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
 import { InputForm } from './InputForm';
-import { Book } from '@/app/_components/_services/types';
+import { Book } from '@/app/_services/types';
 
 interface Props {
   book: Book;

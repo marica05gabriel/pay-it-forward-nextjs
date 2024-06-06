@@ -1,5 +1,5 @@
-import { RefObject, useRef } from "react";
-import { PRODUCTS_SUB_MENU, SubMenuList } from "../../const";
+import { RefObject, useRef } from 'react';
+import { SubMenuList } from '../../const';
 
 interface Props {
   label: string;
@@ -12,11 +12,11 @@ export const ComplexItem = ({ label, dropdownHandler, itemList }: Props) => {
 
   return (
     <li
-      className="hover:text-indigo-700 cursor-pointer h-full flex items-center text-sm text-gry-800 mx-5 tracking-normal relative"
+      className='text-gry-800 relative mx-5 flex h-full cursor-pointer items-center text-sm tracking-normal hover:text-indigo-700'
       onClick={() => dropdownHandler(productsDropDownRef)}
     >
       <InternalItem label={label} />
-      <SubMenu subListRef={productsDropDownRef} itemList={itemList}/>
+      <SubMenu subListRef={productsDropDownRef} itemList={itemList} />
     </li>
   );
 };
@@ -26,23 +26,23 @@ interface InternalItemProps {
 }
 const InternalItem = ({ label }: InternalItemProps) => {
   return (
-    <a className="flex items-center text-gray-800">
+    <a className='flex items-center text-gray-800'>
       {label}
-      <span className="ml-2">
+      <span className='ml-2'>
         <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="icon icon-tabler icon-tabler-chevron-down"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          strokeWidth="1.5"
-          stroke="currentColor"
-          fill="none"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+          xmlns='http://www.w3.org/2000/svg'
+          className='icon icon-tabler icon-tabler-chevron-down'
+          width='16'
+          height='16'
+          viewBox='0 0 24 24'
+          strokeWidth='1.5'
+          stroke='currentColor'
+          fill='none'
+          strokeLinecap='round'
+          strokeLinejoin='round'
         >
-          <path stroke="none" d="M0 0h24v24H0z" />
-          <polyline points="6 9 12 15 18 9" />
+          <path stroke='none' d='M0 0h24v24H0z' />
+          <polyline points='6 9 12 15 18 9' />
         </svg>
       </span>
     </a>
@@ -56,12 +56,12 @@ interface SubMenuProps {
 const SubMenu = ({ subListRef, itemList }: SubMenuProps) => (
   <ul
     ref={subListRef}
-    className="bg-white shadow rounded py-1 w-40 left-0 mt-16 -ml-4 absolute hidden top-0"
+    className='absolute left-0 top-0 -ml-4 mt-16 hidden w-40 rounded bg-white py-1 shadow'
   >
     {itemList.map((item) => (
       <li
         key={item.label}
-        className="cursor-pointer text-gray-800 text-sm leading-3 tracking-normal py-3 hover:bg-indigo-700 hover:text-white px-3 font-normal"
+        className='cursor-pointer px-3 py-3 text-sm font-normal leading-3 tracking-normal text-gray-800 hover:bg-indigo-700 hover:text-white'
       >
         <a href={item.href}>{item.label}</a>
       </li>

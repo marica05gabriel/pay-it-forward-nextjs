@@ -1,13 +1,13 @@
 'use client';
-import { useEnrollBook } from '@/app/_components/_services/useEnrollBook';
+
+import { useEnrollBook } from '@/app/_services/useEnrollBook';
 import { BookInfoForm } from './BookInfoForm';
 import { SearchISBNForm } from './SearchISBNForm';
 import { SelectLocationForm } from './SelectLocationForm';
 import { useState } from 'react';
 import clsx from 'clsx';
-import { useSearchBook } from '@/app/_components/_services/useSearchBook';
-import { Loading } from '../Loading';
-import { BookLocation, NO_BOOK } from '@/app/_components/_services/types';
+import { useSearchBook } from '@/app/_services/useSearchBook';
+import { BookLocation } from '@/app/_services/types';
 import { LoadingComponent } from '../LoadingComponent';
 
 export const EnrollBookForm = () => {
@@ -53,11 +53,11 @@ export const EnrollBookForm = () => {
           book &&
             location &&
             'w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800',
-          !(book && location) &&
+          (!book || !location || enrollLoading) &&
             'cursor-not-allowed rounded-md bg-gray-300 px-4 py-2 opacity-50'
         )}
         onClick={handleSubmit}
-        disabled={!(book && location)}
+        disabled={!(book && location) || enrollLoading}
       >
         Submit
       </button>

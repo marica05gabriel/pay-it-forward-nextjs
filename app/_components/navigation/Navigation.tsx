@@ -3,14 +3,19 @@
 import { useRef } from 'react';
 import { NavBar } from './navbar/NavBar';
 import { SideBar } from './sidebar/SideBar';
-import { ROUTE_ITEMS } from '@/app/_utils/routes-util';
+import { ROUTES, ROUTE_ITEMS, RoutesEnum } from '@/app/_utils/routes-util';
 
 export const Navigation = () => {
   const sideBar = useRef<HTMLDivElement>(null);
   const cross = useRef<HTMLButtonElement>(null);
   const menu = useRef<HTMLButtonElement>(null);
 
-  const items = ROUTE_ITEMS;
+  const items = ROUTE_ITEMS.map((route) => {
+    if (ROUTES[RoutesEnum.TRANSFER_REQUESTS] === route.route) {
+      route.route += '/transferee';
+    }
+    return route;
+  });
 
   const sidebarHandler = (display: any) => {
     if (

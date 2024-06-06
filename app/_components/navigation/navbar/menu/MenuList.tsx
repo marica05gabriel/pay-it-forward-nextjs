@@ -1,8 +1,5 @@
 import { RefObject, useRef } from 'react';
 import { Item } from './Item';
-import { ComplexItem } from './ComplexItem';
-import { DELIVERABLES_SUB_MENU, MY_BOOKS_SUB_MENU } from '../../const';
-import { ROUTES, RoutesEnum } from '@/app/_utils/routes-util';
 
 interface Props {
   items: {

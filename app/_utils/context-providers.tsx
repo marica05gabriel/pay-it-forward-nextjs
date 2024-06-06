@@ -41,7 +41,7 @@ export const initializeThirdWebContext = () => {
     chain: chain,
   });
 
-  return { thirdWebClient, chain, wallet, contract } as ThirdWebContextProps;
+  return { thirdWebClient, chain, wallet, contract };
 };
 
 interface Props {
@@ -54,7 +54,9 @@ export const ThirdWebContextProvider = ({ children }: Props) => {
   return (
     <QueryClientProvider client={queryClient}>
       <ThirdWebContext.Provider value={initialState}>
-        <ThirdwebProvider>{children}</ThirdwebProvider>
+        <ThirdwebProvider activeChain={initialState.chain.id}>
+          {children}
+        </ThirdwebProvider>
       </ThirdWebContext.Provider>
     </QueryClientProvider>
   );

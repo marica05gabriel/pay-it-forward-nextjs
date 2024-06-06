@@ -46,6 +46,9 @@ export default async function MyBooksPage({
     }
   );
   const data = await response.json();
+  console.log('MY books');
+  console.log(data);
+
   let totalPages;
   let books: BookType[] = [];
   if (response.ok) {

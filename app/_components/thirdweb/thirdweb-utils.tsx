@@ -1,5 +1,6 @@
 import { useThirdWebContext } from '@/app/_utils/context-providers';
 import { getContract } from 'thirdweb';
+import { TransactionReceipt } from '@ethersproject/abstract-provider';
 
 export const CLIENT_ID =
   process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID_HARDHAT_LOCAL;
@@ -21,4 +22,40 @@ export const getThirdWebContract = (address: string) => {
     address: address,
     chain: thirdWebContext.chain,
   });
+};
+
+export type MintReceiptData = {
+  txHash: string;
+  operator: string;
+  from: string;
+  to: string;
+  bookPublicId: string;
+  valueMinted: string;
+  data: string;
+};
+export const extractDataFromReceipt = (receipt: TransactionReceipt) => {
+  const logsData = receipt.logs[0].data.substring(2);
+  const data: MintReceiptData = {
+    txHash: receipt.transactionHash,
+    data: logsData,
+    bookPublicId: logsData.substring(0, 64),
+    valueMinted: logsData.substring(65),
+    operator: receipt.logs[0].topics[1],
+    from: receipt.logs[0].topics[2],
+    to: receipt.logs[0].topics[3],
+  };
+  return data;
+};
+
+export enum ErrorEnum {
+  MINT_ERROR,
+  ENROLL,
+}
+export type Error = {
+  [key: string]: string;
+};
+
+export const ERRORS = {
+  [ErrorEnum.MINT_ERROR]: 'Error occured during minting process!',
+  [ErrorEnum.ENROLL]: 'Error occured while trying to enrol a book!',
 };

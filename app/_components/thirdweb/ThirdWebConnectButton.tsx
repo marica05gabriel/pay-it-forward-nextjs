@@ -1,7 +1,7 @@
 'use client';
 
 import { useThirdWebContext } from '@/utils/context-providers';
-import { usePersonalWalletAddress, useSigner } from '@thirdweb-dev/react';
+import { useSigner } from '@thirdweb-dev/react';
 import { ConnectButton } from 'thirdweb/react';
 
 export const ThirdWebConnectButton = () => {

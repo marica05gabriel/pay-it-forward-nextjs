@@ -1,9 +1,9 @@
 'use client';
 import { useState } from 'react';
-import { useSearchBookLocation } from '../_components/_services/useSearchBookLocation';
+import { useSearchBookLocation } from '../_services/useSearchBookLocation';
 import { SelectForm } from '../_ui/forms/SelectForm';
 import useDebounce from '../_utils/useDebounce';
-import { BookLocation } from '../_components/_services/types';
+import { BookLocation } from '../_services/types';
 import clsx from 'clsx';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ROUTES, RoutesEnum } from '../_utils/routes-util';

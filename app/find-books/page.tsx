@@ -1,8 +1,6 @@
 import { TitlePanel } from '@/components/panels/title-panel';
-import { BookListing } from '@/ui/BookListing';
 import { MainContainer } from '@/ui/MainContainer';
 import { ROUTES, RoutesEnum, getRouteSettings } from '@/utils/routes-util';
-import { BookListingWrapper } from '../_components/book-listing/BookListingWrapper';
 import { getParamOrDefault } from '../_utils/search-params-utils';
 import { ListMyBooks } from '../_components/my-books/ListBooks';
 import { PaginationComponent } from '../_ui/pagination/PaginationComponent';
@@ -15,6 +13,8 @@ import {
   computePagesToDisplay,
 } from '../_utils/pagination-utils';
 import { SelectLocationForm } from './SelectLocationForm';
+import { RequestBookButton } from '../_ui/buttons/request-book-button';
+import { handleRequestBook } from '../_services/server-actions';
 
 const FIND_BOOKS_URL = `${process.env.RESOURCE_SERVER_URL_BOOK}`;
 
@@ -58,6 +58,7 @@ export default async function FindBooksPage({
     totalPages = data.page.totalPages;
   }
   console.log(books);
+
   return (
     <>
       <TitlePanel
@@ -68,7 +69,18 @@ export default async function FindBooksPage({
         <SelectLocationForm />
         <ListMyBooks
           books={books}
-          additionalContent={(bookId) => <div>Additional {bookId}</div>}
+          additionalContent={(bookId) => (
+            <RequestBookButton
+              key={bookId}
+              disabled={bookId % 2 == 0}
+              label='Request book'
+              onSubmit={async (walletAddress) => {
+                'use server';
+                const response = await handleRequestBook(bookId, walletAddress);
+                return response;
+              }}
+            />
+          )}
         />
         <PaginationComponent
           currentPage={page}

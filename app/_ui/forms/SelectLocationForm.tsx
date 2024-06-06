@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import { SelectForm } from './SelectForm';
 import { BookLocationFormContainer } from './BookLocationForm';
 import useDebounce from '@/app/_utils/useDebounce';
-import { BookLocation } from '@/app/_components/_services/types';
-import { useSearchBookLocation } from '@/app/_components/_services/useSearchBookLocation';
+import { BookLocation } from '@/app/_services/types';
+import { useSearchBookLocation } from '@/app/_services/useSearchBookLocation';
 
 interface Props {
   setLocation: (location: BookLocation) => void;

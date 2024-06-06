@@ -5,6 +5,7 @@ export enum RoutesEnum {
   FIND_BOOKS,
   MY_BOOKS,
   ENROLL_BOOK,
+  TRANSFER_REQUESTS,
   BOOK_REQUESTS,
   BOOK_TRANSFERS,
   TEST_ZONE,
@@ -15,6 +16,7 @@ export const ROUTES = {
   [RoutesEnum.FIND_BOOKS]: '/find-books',
   [RoutesEnum.MY_BOOKS]: '/books/me',
   [RoutesEnum.ENROLL_BOOK]: '/books/me/enroll',
+  [RoutesEnum.TRANSFER_REQUESTS]: '/transfer-requests',
   [RoutesEnum.BOOK_REQUESTS]: '/book-requests',
   [RoutesEnum.BOOK_TRANSFERS]: '/ongoing-transfers',
   [RoutesEnum.TEST_ZONE]: '/test-zone',
@@ -25,7 +27,8 @@ export const ROUTE_LABELS = {
   [RoutesEnum.DASHBOARD]: 'Dashboard',
   [RoutesEnum.FIND_BOOKS]: 'Find books',
   [RoutesEnum.MY_BOOKS]: 'My Books',
-  [RoutesEnum.ENROLL_BOOK]: 'Enroll a book',
+  [RoutesEnum.ENROLL_BOOK]: 'Book enroll',
+  [RoutesEnum.TRANSFER_REQUESTS]: 'Transfer requests',
   [RoutesEnum.BOOK_REQUESTS]: 'Book requests',
   [RoutesEnum.BOOK_TRANSFERS]: 'Ongoing Transfers',
   [RoutesEnum.TEST_ZONE]: 'Test zone',
@@ -48,6 +51,10 @@ export const ROUTE_ITEMS = [
   {
     label: ROUTE_LABELS[RoutesEnum.ENROLL_BOOK],
     route: ROUTES[RoutesEnum.ENROLL_BOOK],
+  },
+  {
+    label: ROUTE_LABELS[RoutesEnum.TRANSFER_REQUESTS],
+    route: ROUTES[RoutesEnum.TRANSFER_REQUESTS],
   },
   {
     label: ROUTE_LABELS[RoutesEnum.BOOK_REQUESTS],

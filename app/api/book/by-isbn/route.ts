@@ -1,4 +1,4 @@
-import { Book } from '@/app/_components/_services/types';
+import { Book } from '@/app/_services/types';
 import { NextRequest, NextResponse } from 'next/server';
 
 const baseUrl = process.env.RESOURCE_SERVER_URL_BOOK;
