@@ -51,3 +51,18 @@ export type ValidationResult = {
   status: ValidationResultEnum;
   failures?: Array<string>;
 };
+
+export type TransfeRequestEnum = 'accept' | 'refuse' | 'cancel';
+
+export type TransferRequest = {
+  id: string;
+  createdAt: Date;
+  from: string;
+  fromPublicId: string;
+  to: string;
+  toPublicId: string;
+  target: string;
+  targetPublicId: string;
+  status: 'PENDING' | 'CANCELED' | 'ACCEPTED' | 'REFUSED';
+  consentDate: Date | null;
+};

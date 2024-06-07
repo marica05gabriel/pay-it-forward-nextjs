@@ -1,33 +1,38 @@
-import { getParamOrDefault } from '@/app/_utils/search-params-utils';
-import { ROUTES, RoutesEnum, getRouteSettings } from '../../_utils/routes-util';
+import { TitlePanel } from '@/components/panels/title-panel';
+import { MainContainer } from '@/ui/MainContainer';
+import { ROUTES, RoutesEnum, getRouteSettings } from '@/utils/routes-util';
+import { ChatComponent } from '@/components/chat/ChatComponent';
+import { ChatProvider } from '../../_components/chat/context-providers/ChatProvider';
+import { SocketProvider } from '../../_components/chat/context-providers/SocketProvider';
+import { getMeAsContact } from '../../_components/chat/services/chatService';
+import { ContactsProvider } from '../../_components/chat/context-providers/ContactsProvider';
+import { getParamOrDefault } from '../../_utils/search-params-utils';
 import {
   DEFAULT_PAGE_NUMBER,
   DEFAULT_PAGE_SIZE,
   computePagesToDisplay,
-} from '@/app/_utils/pagination-utils';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/_utils/auth-utils';
+} from '../../_utils/pagination-utils';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '../../_utils/auth-utils';
 import { redirect } from 'next/navigation';
-import { TitlePanel } from '@/app/_components/panels/title-panel';
-import { MainContainer } from '@/app/_ui/MainContainer';
-import { BookType, TransferRequest } from '@/app/_utils/types';
-import { ListMyBooks } from '@/app/_components/my-books/ListBooks';
-import { PaginationComponent } from '@/app/_ui/pagination/PaginationComponent';
+import { BookType, TransferRequest } from '../../_utils/types';
 import Link from 'next/link';
-import { CancelBookRequestButton } from '@/app/_ui/buttons/cancel-book-request-button';
+import { ListMyBooks } from '../../_components/my-books/ListBooks';
+import { CancelBookRequestButton } from '../../_ui/buttons/cancel-book-request-button';
 import {
   handleAcceptBookRequest,
   handleCancelBookRequest,
   handleRefuseBookRequest,
-} from '@/app/_services/server-actions';
+} from '../../_services/server-actions';
+import { AcceptBookRequestButton } from '../../_ui/buttons/approve-book-request-button';
+import { RefuseBookRequestButton } from '../../_ui/buttons/refuse-book-request-button';
+import { PaginationComponent } from '../../_ui/pagination/PaginationComponent';
 import _ from 'lodash';
-import { AcceptBookRequestButton } from '@/app/_ui/buttons/approve-book-request-button';
-import { RefuseBookRequestButton } from '@/app/_ui/buttons/refuse-book-request-button';
 
-const TRANSFER_REQUESTS_URL = `${process.env.RESOURCE_SERVER_URL_TRANSFER}/request`;
+const TRANSFERS_URL = `${process.env.RESOURCE_SERVER_URL_TRANSFER}`;
 const FIND_BOOKS_URL = `${process.env.RESOURCE_SERVER_URL_BOOK}`;
 
-export default async function TransferRequestsPage({
+export default async function OngoingTransfersPage({
   params,
   searchParams,
 }: {
@@ -48,14 +53,14 @@ export default async function TransferRequestsPage({
     currentTransferParty !== 'transferor' &&
     currentTransferParty !== 'transferee'
   ) {
-    redirect(`${ROUTES[RoutesEnum.TRANSFER_REQUESTS]}/transferee`);
+    redirect(`${ROUTES[RoutesEnum.BOOK_TRANSFERS]}/transferee`);
   }
 
-  const currentRoute = RoutesEnum.TRANSFER_REQUESTS;
+  const currentRoute = RoutesEnum.BOOK_TRANSFERS;
   const routeSettings = getRouteSettings(currentRoute);
 
   let response = await fetch(
-    `${TRANSFER_REQUESTS_URL}/${currentTransferParty}/${username}?page=${page - 1}&size=${size}`,
+    `${TRANSFERS_URL}/${currentTransferParty}/${username}?page=${page - 1}&size=${size}`,
     {
       method: 'GET',
       headers: {
@@ -69,22 +74,22 @@ export default async function TransferRequestsPage({
     console.log('Response');
   }
 
-  let transferRequestsData = await response.json();
-  console.log(transferRequestsData);
+  let transfersData = await response.json();
+  console.log(transfersData);
   let totalElements;
   let totalPages;
-  let transferRequests: TransferRequest[] = [];
+  let transfers: TransferRequest[] = []; // TODO Transfer here, not TransferRequest
   if (response.ok) {
-    transferRequests = transferRequestsData.content;
-    totalPages = transferRequestsData.page.totalPages;
-    totalElements = transferRequestsData.page.totalElements;
+    transfers = transfersData.content;
+    totalPages = transfersData.page.totalPages;
+    totalElements = transfersData.page.totalElements;
   }
-  console.log(transferRequests);
+  console.log(transfers);
 
-  const bookIdToRequestId = new Map<string, TransferRequest>();
+  const bookIdToTransferId = new Map<string, TransferRequest>();
 
-  transferRequests.forEach((tr) => bookIdToRequestId.set(tr.target, tr));
-  const bookIdList = transferRequests.map((tr) => tr.target);
+  transfers.forEach((tr) => bookIdToTransferId.set(tr.target, tr));
+  const bookIdList = transfers.map((tr) => tr.target);
 
   console.log('ID list');
   console.log(bookIdList);
@@ -169,7 +174,7 @@ export default async function TransferRequestsPage({
                   'use server';
                   const response = await handleCancelBookRequest(
                     bookId,
-                    bookIdToRequestId
+                    bookIdToTransferId
                   );
                   return response;
                 }}
@@ -184,7 +189,7 @@ export default async function TransferRequestsPage({
                     'use server';
                     const response = await handleAcceptBookRequest(
                       bookId,
-                      bookIdToRequestId
+                      bookIdToTransferId
                     );
                     return response;
                   }}
@@ -197,7 +202,7 @@ export default async function TransferRequestsPage({
                     'use server';
                     const response = await handleRefuseBookRequest(
                       bookId,
-                      bookIdToRequestId
+                      bookIdToTransferId
                     );
                     return response;
                   }}

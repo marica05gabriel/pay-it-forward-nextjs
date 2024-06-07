@@ -7,7 +7,7 @@ import { SocketProvider } from '../_components/chat/context-providers/SocketProv
 import { getMeAsContact } from '../_components/chat/services/chatService';
 import { ContactsProvider } from '../_components/chat/context-providers/ContactsProvider';
 
-export default async function OngoingTransfersPage() {
+export default async function ChatPage() {
   const currentRoute = RoutesEnum.BOOK_TRANSFERS;
   const routeSettings = getRouteSettings(currentRoute);
   const me = getMeAsContact();

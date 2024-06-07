@@ -11,7 +11,10 @@ export const Navigation = () => {
   const menu = useRef<HTMLButtonElement>(null);
 
   const items = ROUTE_ITEMS.map((route) => {
-    if (ROUTES[RoutesEnum.TRANSFER_REQUESTS] === route.route) {
+    if (
+      ROUTES[RoutesEnum.TRANSFER_REQUESTS] === route.route ||
+      ROUTES[RoutesEnum.BOOK_TRANSFERS] === route.route
+    ) {
       route.route += '/transferee';
     }
     return route;

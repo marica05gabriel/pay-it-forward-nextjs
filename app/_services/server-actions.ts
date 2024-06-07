@@ -2,7 +2,7 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../_utils/auth-utils';
 import { redirect } from 'next/navigation';
 import { ROUTES, RoutesEnum } from '../_utils/routes-util';
-import { BookType } from '../_utils/types';
+import { BookType, TransfeRequestEnum, TransferRequest } from '../_utils/types';
 
 const TRANSFER_REQUESTS_URL = `${process.env.RESOURCE_SERVER_URL_TRANSFER}/request`;
 const TRANSFERS_URL = `${process.env.RESOURCE_SERVER_URL_TRANSFER}`;
@@ -49,4 +49,167 @@ export const handleRequestBook = async (
   console.log(transferRequest);
 
   return { status: 'ok' };
+};
+
+export const handleCancelBookRequest = async (
+  bookId: number,
+  bookIdToRequestId: Map<string, TransferRequest>
+) => {
+  'use server';
+  const transferRequest = bookIdToRequestId.get(String(bookId));
+  if (transferRequest === undefined) {
+    throw Error('Transfer request undefined!');
+  }
+  const cancelResponse = await cancelBookRequest(transferRequest);
+  console.log('CancelResponse');
+  console.log(cancelResponse);
+  return cancelResponse;
+};
+
+export const cancelBookRequest = async (transferRequest: TransferRequest) => {
+  'use server';
+  const session = await getServerSession(authOptions);
+  if (!session || !session.user || session.user.name !== transferRequest.to) {
+    redirect(ROUTES[RoutesEnum.UNAUTHORIZED]);
+  }
+  const consentType: TransfeRequestEnum = 'cancel';
+  const transferRequestUUID = transferRequest.id;
+  const cancelTransferRequestResponse = await fetch(
+    `${TRANSFER_REQUESTS_URL}/${consentType}/${transferRequestUUID}`,
+    {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        candidateId: session.user.name,
+        candidatePublicId: transferRequest.toPublicId,
+      }),
+    }
+  );
+  console.log('Cancel transfer request:');
+  console.log(cancelTransferRequestResponse);
+
+  const cancelResponseData = await cancelTransferRequestResponse.json();
+  if (cancelTransferRequestResponse.status === 200) {
+    return {
+      status: cancelResponseData.status,
+      code: cancelResponseData.code,
+      message: cancelResponseData.message,
+    };
+  } else {
+    console.error('CANCEL NOT SUCCESSFUL');
+    console.error(cancelResponseData);
+    throw Error('CANCEL NOT SUCCESSFUL');
+  }
+};
+
+export const handleAcceptBookRequest = async (
+  bookId: number,
+  bookIdToRequestId: Map<string, TransferRequest>
+) => {
+  'use server';
+  const transferRequest = bookIdToRequestId.get(String(bookId));
+  if (transferRequest === undefined) {
+    throw Error('Transfer request undefined!');
+  }
+  const acceptResponse = await acceptBookRequest(transferRequest);
+  console.log('AcceptResponse');
+  console.log(acceptResponse);
+  return acceptResponse;
+};
+
+export const acceptBookRequest = async (transferRequest: TransferRequest) => {
+  'use server';
+  const session = await getServerSession(authOptions);
+  console.log('TRANSFER REQUEST TO APPROVE');
+  console.log(transferRequest);
+  if (!session || !session.user || session.user.name !== transferRequest.from) {
+    redirect(ROUTES[RoutesEnum.UNAUTHORIZED]);
+  }
+  const consentType: TransfeRequestEnum = 'accept';
+  const transferRequestUUID = transferRequest.id;
+  const acceptTransferRequestResponse = await fetch(
+    `${TRANSFER_REQUESTS_URL}/${consentType}/${transferRequestUUID}`,
+    {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        candidateId: session.user.name,
+        candidatePublicId: transferRequest.toPublicId,
+      }),
+    }
+  );
+  console.log('Accept transfer request:');
+  console.log(acceptTransferRequestResponse);
+
+  const acceptResponseData = await acceptTransferRequestResponse.json();
+  if (acceptTransferRequestResponse.status === 201) {
+    return {
+      status: acceptResponseData.status,
+      code: acceptResponseData.code,
+      message: acceptResponseData.message,
+    };
+  } else {
+    console.error('ACCEPT REQUEST NOT SUCCESSFUL');
+    console.error(acceptResponseData);
+    throw Error('ACCEPT REQUEST SUCCESSFUL');
+  }
+};
+
+export const handleRefuseBookRequest = async (
+  bookId: number,
+  bookIdToRequestId: Map<string, TransferRequest>
+) => {
+  'use server';
+  const transferRequest = bookIdToRequestId.get(String(bookId));
+  if (transferRequest === undefined) {
+    throw Error('Transfer request undefined!');
+  }
+  const refuseResponse = await refuseBookRequest(transferRequest);
+  console.log('RefuseResponse');
+  console.log(refuseResponse);
+  return refuseResponse;
+};
+
+export const refuseBookRequest = async (transferRequest: TransferRequest) => {
+  'use server';
+  console.log('TRANSFER REQUEST TO REFUSE');
+  console.log(transferRequest);
+  const session = await getServerSession(authOptions);
+  if (!session || !session.user || session.user.name !== transferRequest.from) {
+    redirect(ROUTES[RoutesEnum.UNAUTHORIZED]);
+  }
+  const consentType: TransfeRequestEnum = 'refuse';
+  const transferRequestUUID = transferRequest.id;
+  const refuseTransferRequestResponse = await fetch(
+    `${TRANSFER_REQUESTS_URL}/${consentType}/${transferRequestUUID}`,
+    {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        candidateId: session.user.name,
+        candidatePublicId: transferRequest.toPublicId,
+      }),
+    }
+  );
+  console.log('Refuse transfer request:');
+  console.log(refuseTransferRequestResponse);
+
+  const refuseResponseData = await refuseTransferRequestResponse.json();
+  if (refuseTransferRequestResponse.status === 200) {
+    return {
+      status: refuseResponseData.status,
+      code: refuseResponseData.code,
+      message: refuseResponseData.message,
+    };
+  } else {
+    console.error('REFUSE REQUEST NOT SUCCESSFUL');
+    console.error(refuseResponseData);
+    throw Error('REFUSE REQUEST SUCCESSFUL');
+  }
 };

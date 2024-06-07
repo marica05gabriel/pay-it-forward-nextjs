@@ -33,18 +33,40 @@ export type MintReceiptData = {
   valueMinted: string;
   data: string;
 };
+
+/**
+ * On Ethereum and other networks compatible with the Ethereum Virtual Machine (EVM),
+ * public addresses all share the same format:
+ * they begin with 0x, and are followed by 40 alphanumeric characters (numerals and letters),
+ * adding up to 42 characters in total.
+ * @param receipt
+ * @see <a>https://support.metamask.io/getting-started/the-ethereum-address-format-and-why-it-matters-when-using-metamask/#:~:text=On%20Ethereum%20and%20other%20networks,to%2042%20characters%20in%20total.</a>
+ * @returns
+ */
 export const extractDataFromReceipt = (receipt: TransactionReceipt) => {
   const logsData = receipt.logs[0].data.substring(2);
+
   const data: MintReceiptData = {
     txHash: receipt.transactionHash,
     data: logsData,
     bookPublicId: logsData.substring(0, 64),
-    valueMinted: logsData.substring(65),
-    operator: receipt.logs[0].topics[1],
-    from: receipt.logs[0].topics[2],
-    to: receipt.logs[0].topics[3],
+    valueMinted: logsData.substring(64),
+    operator: get42Address(receipt.logs[0].topics[1]),
+    from: get42Address(receipt.logs[0].topics[2]),
+    to: get42Address(receipt.logs[0].topics[3]),
   };
   return data;
+};
+
+const get42Address = (address: string) => {
+  if (address.length === 64) {
+    return `0x${address.substring(24)}`;
+  }
+  if (address.length === 66) {
+    return `0x${address.substring(26)}`;
+  }
+  console.warn('Unusual address:', address);
+  return address;
 };
 
 export enum ErrorEnum {

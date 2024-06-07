@@ -6,8 +6,8 @@ export enum RoutesEnum {
   MY_BOOKS,
   ENROLL_BOOK,
   TRANSFER_REQUESTS,
-  BOOK_REQUESTS,
   BOOK_TRANSFERS,
+  CHAT,
   TEST_ZONE,
   UNAUTHORIZED,
 }
@@ -17,8 +17,8 @@ export const ROUTES = {
   [RoutesEnum.MY_BOOKS]: '/books/me',
   [RoutesEnum.ENROLL_BOOK]: '/books/me/enroll',
   [RoutesEnum.TRANSFER_REQUESTS]: '/transfer-requests',
-  [RoutesEnum.BOOK_REQUESTS]: '/book-requests',
   [RoutesEnum.BOOK_TRANSFERS]: '/ongoing-transfers',
+  [RoutesEnum.CHAT]: '/chat',
   [RoutesEnum.TEST_ZONE]: '/test-zone',
   [RoutesEnum.UNAUTHORIZED]: '/unauthorized',
 };
@@ -29,8 +29,8 @@ export const ROUTE_LABELS = {
   [RoutesEnum.MY_BOOKS]: 'My Books',
   [RoutesEnum.ENROLL_BOOK]: 'Book enroll',
   [RoutesEnum.TRANSFER_REQUESTS]: 'Transfer requests',
-  [RoutesEnum.BOOK_REQUESTS]: 'Book requests',
   [RoutesEnum.BOOK_TRANSFERS]: 'Ongoing Transfers',
+  [RoutesEnum.CHAT]: 'Open chats',
   [RoutesEnum.TEST_ZONE]: 'Test zone',
   [RoutesEnum.UNAUTHORIZED]: 'UNAUTHORIZED',
 };
@@ -57,12 +57,12 @@ export const ROUTE_ITEMS = [
     route: ROUTES[RoutesEnum.TRANSFER_REQUESTS],
   },
   {
-    label: ROUTE_LABELS[RoutesEnum.BOOK_REQUESTS],
-    route: ROUTES[RoutesEnum.BOOK_REQUESTS],
-  },
-  {
     label: ROUTE_LABELS[RoutesEnum.BOOK_TRANSFERS],
     route: ROUTES[RoutesEnum.BOOK_TRANSFERS],
+  },
+  {
+    label: ROUTE_LABELS[RoutesEnum.CHAT],
+    route: ROUTES[RoutesEnum.CHAT],
   },
   {
     label: ROUTE_LABELS[RoutesEnum.TEST_ZONE],
