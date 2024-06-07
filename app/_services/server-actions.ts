@@ -2,7 +2,13 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../_utils/auth-utils';
 import { redirect } from 'next/navigation';
 import { ROUTES, RoutesEnum } from '../_utils/routes-util';
-import { BookType, TransfeRequestEnum, TransferRequest } from '../_utils/types';
+import {
+  BookTransfer,
+  BookType,
+  TransfeRequestEnum,
+  TransferEnum,
+  TransferRequest,
+} from '../_utils/types';
 
 const TRANSFER_REQUESTS_URL = `${process.env.RESOURCE_SERVER_URL_TRANSFER}/request`;
 const TRANSFERS_URL = `${process.env.RESOURCE_SERVER_URL_TRANSFER}`;
@@ -211,5 +217,122 @@ export const refuseBookRequest = async (transferRequest: TransferRequest) => {
     console.error('REFUSE REQUEST NOT SUCCESSFUL');
     console.error(refuseResponseData);
     throw Error('REFUSE REQUEST SUCCESSFUL');
+  }
+};
+
+export const handleCancelTransfer = async (
+  bookId: number,
+  bookIdToTransferId: Map<string, BookTransfer>
+) => {
+  'use server';
+  const transfer = bookIdToTransferId.get(String(bookId));
+  if (transfer === undefined) {
+    throw Error('Transfer request undefined!');
+  }
+  const cancelResponse = await cancelTransfer(transfer);
+  console.log('CancelResponse');
+  console.log(cancelResponse);
+  return cancelResponse;
+};
+
+export const cancelTransfer = async (transfer: BookTransfer) => {
+  'use server';
+  const session = await getServerSession(authOptions);
+  if (
+    !session ||
+    !session.user ||
+    (session.user.name !== transfer.to && session.user.name !== transfer.from)
+  ) {
+    redirect(ROUTES[RoutesEnum.UNAUTHORIZED]);
+  }
+  const action: TransferEnum = 'cancel';
+  const transferUUID = transfer.id;
+  const cancelTransferResponse = await fetch(
+    `${TRANSFERS_URL}/${transferUUID}/${action}`,
+    {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        candidateId: session.user.name,
+        candidatePublicId: transfer.toPublicId,
+      }),
+    }
+  );
+  console.log('Cancel transfer response:');
+  console.log(cancelTransferResponse);
+
+  const cancelResponseData = await cancelTransferResponse.json();
+  if (cancelTransferResponse.status === 200) {
+    return {
+      status: cancelResponseData.status,
+      code: cancelResponseData.code,
+      message: cancelResponseData.message,
+    };
+  } else {
+    console.error('CANCEL NOT SUCCESSFUL');
+    console.error(cancelResponseData);
+    throw Error('CANCEL NOT SUCCESSFUL');
+  }
+};
+
+export const handleOnCompleteTransfer = async (
+  transfer: BookTransfer,
+  signature: string,
+  txHash: string
+) => {
+  'use server';
+  // const transfer = bookIdToTransferId.get(String(bookId));
+  if (transfer === undefined) {
+    throw Error('Transfer undefined!');
+  }
+  const completeResponse = await completeTransfer(transfer, signature, txHash);
+  console.log('CompleteResponse');
+  console.log(completeResponse);
+  return completeResponse;
+};
+
+export const completeTransfer = async (
+  transfer: BookTransfer,
+  signature: string,
+  txHash: string
+) => {
+  'use server';
+  const session = await getServerSession(authOptions);
+  if (!session || !session.user || session.user.name !== transfer.from) {
+    redirect(ROUTES[RoutesEnum.UNAUTHORIZED]);
+  }
+  const action: TransferEnum = 'complete';
+  const transferUUID = transfer.id;
+  const completeTransferResponse = await fetch(
+    `${TRANSFERS_URL}/${transferUUID}/${action}`,
+    {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        candidateId: session.user.name,
+        candidatePublicId: transfer.toPublicId,
+        signature: signature,
+        publicTransactionHash: txHash,
+      }),
+    }
+  );
+  console.log('Complete transfer response:');
+  console.log(completeTransferResponse);
+
+  const completeResponseData = await completeTransferResponse.json();
+  if (completeTransferResponse.status === 200) {
+    return {
+      status: completeResponseData.status,
+      code: completeResponseData.code,
+      message: completeResponseData.message,
+    };
+  } else {
+    console.error('COMPLETE NOT SUCCESSFUL');
+    console.error(completeResponseData);
+    throw Error('COMPLETE NOT SUCCESSFUL');
   }
 };

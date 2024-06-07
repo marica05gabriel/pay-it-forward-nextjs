@@ -66,3 +66,26 @@ export type TransferRequest = {
   status: 'PENDING' | 'CANCELED' | 'ACCEPTED' | 'REFUSED';
   consentDate: Date | null;
 };
+
+export type TransferEnum = 'complete' | 'cancel';
+
+export type BookTransfer = {
+  id: string;
+  createdAt: Date;
+  publicTransactionHash: string | null;
+  from: string;
+  fromPublicId: string;
+  to: string;
+  toPublicId: string;
+  target: string;
+  targetPublicId: string;
+  status: 'PENDING' | 'CANCELED' | 'COMPLETED';
+  // TODO canceledBy
+};
+
+export type BaseResponse = {
+  status: string;
+  code: string;
+  message: string;
+  fields?: Map<string, string>;
+};

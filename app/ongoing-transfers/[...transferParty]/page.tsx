@@ -1,11 +1,6 @@
 import { TitlePanel } from '@/components/panels/title-panel';
 import { MainContainer } from '@/ui/MainContainer';
 import { ROUTES, RoutesEnum, getRouteSettings } from '@/utils/routes-util';
-import { ChatComponent } from '@/components/chat/ChatComponent';
-import { ChatProvider } from '../../_components/chat/context-providers/ChatProvider';
-import { SocketProvider } from '../../_components/chat/context-providers/SocketProvider';
-import { getMeAsContact } from '../../_components/chat/services/chatService';
-import { ContactsProvider } from '../../_components/chat/context-providers/ContactsProvider';
 import { getParamOrDefault } from '../../_utils/search-params-utils';
 import {
   DEFAULT_PAGE_NUMBER,
@@ -15,19 +10,22 @@ import {
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../../_utils/auth-utils';
 import { redirect } from 'next/navigation';
-import { BookType, TransferRequest } from '../../_utils/types';
+import { BookTransfer, BookType, TransferRequest } from '../../_utils/types';
 import Link from 'next/link';
 import { ListMyBooks } from '../../_components/my-books/ListBooks';
 import { CancelBookRequestButton } from '../../_ui/buttons/cancel-book-request-button';
 import {
   handleAcceptBookRequest,
   handleCancelBookRequest,
+  handleCancelTransfer,
   handleRefuseBookRequest,
 } from '../../_services/server-actions';
 import { AcceptBookRequestButton } from '../../_ui/buttons/approve-book-request-button';
 import { RefuseBookRequestButton } from '../../_ui/buttons/refuse-book-request-button';
 import { PaginationComponent } from '../../_ui/pagination/PaginationComponent';
 import _ from 'lodash';
+import { CancelTransferButton } from '@/app/_ui/buttons/cancel-transfer-button';
+import { GenerateSignatureButton } from '@/app/_ui/buttons/generate-signature-button';
 
 const TRANSFERS_URL = `${process.env.RESOURCE_SERVER_URL_TRANSFER}`;
 const FIND_BOOKS_URL = `${process.env.RESOURCE_SERVER_URL_BOOK}`;
@@ -78,7 +76,7 @@ export default async function OngoingTransfersPage({
   console.log(transfersData);
   let totalElements;
   let totalPages;
-  let transfers: TransferRequest[] = []; // TODO Transfer here, not TransferRequest
+  let transfers: BookTransfer[] = [];
   if (response.ok) {
     transfers = transfersData.content;
     totalPages = transfersData.page.totalPages;
@@ -86,7 +84,7 @@ export default async function OngoingTransfersPage({
   }
   console.log(transfers);
 
-  const bookIdToTransferId = new Map<string, TransferRequest>();
+  const bookIdToTransferId = new Map<string, BookTransfer>();
 
   transfers.forEach((tr) => bookIdToTransferId.set(tr.target, tr));
   const bookIdList = transfers.map((tr) => tr.target);
@@ -96,7 +94,6 @@ export default async function OngoingTransfersPage({
 
   let books: BookType[] = [];
   if (totalElements > 0) {
-    // if (totalElements > 0) {
     response = await fetch(
       `${FIND_BOOKS_URL}/byIdList?page=${page - 1}&size=${size}`,
       {
@@ -138,7 +135,7 @@ export default async function OngoingTransfersPage({
               type='button'
               className='mb-2 me-2 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-center text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700'
             >
-              Waiting for your approval
+              Waiting for your validation
             </Link>
           </div>
         )}
@@ -157,7 +154,7 @@ export default async function OngoingTransfersPage({
               type='button'
               className='mb-2 rounded-lg bg-purple-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900'
             >
-              Waiting for your approval
+              Waiting for your validation
             </Link>
           </div>
         )}
@@ -166,19 +163,25 @@ export default async function OngoingTransfersPage({
           books={books}
           additionalContent={(bookId) =>
             currentTransferParty === 'transferee' ? (
-              <CancelBookRequestButton
-                key={bookId}
-                disabled={bookId % 2 == 0}
-                label='Cancel the request'
-                onSubmit={async () => {
-                  'use server';
-                  const response = await handleCancelBookRequest(
-                    bookId,
-                    bookIdToTransferId
-                  );
-                  return response;
-                }}
-              />
+              <>
+                <GenerateSignatureButton
+                  label='Generate sinature'
+                  transferId={bookIdToTransferId.get(String(bookId))!.id}
+                />
+                <CancelTransferButton
+                  key={bookId}
+                  disabled={bookId % 2 == 0}
+                  label='Cancel ongoing transfer'
+                  onSubmit={async () => {
+                    'use server';
+                    const response = await handleCancelTransfer(
+                      bookId,
+                      bookIdToTransferId
+                    );
+                    return response;
+                  }}
+                />
+              </>
             ) : (
               <div>
                 <AcceptBookRequestButton
@@ -189,18 +192,18 @@ export default async function OngoingTransfersPage({
                     'use server';
                     const response = await handleAcceptBookRequest(
                       bookId,
-                      bookIdToTransferId
+                      new Map()
                     );
                     return response;
                   }}
                 />
-                <RefuseBookRequestButton
-                  key={`${bookId}_refuse_button`}
+                <CancelTransferButton
+                  key={bookId}
                   disabled={bookId % 2 == 0}
-                  label='Refuse request'
+                  label='Cancel ongoing transfer'
                   onSubmit={async () => {
                     'use server';
-                    const response = await handleRefuseBookRequest(
+                    const response = await handleCancelTransfer(
                       bookId,
                       bookIdToTransferId
                     );

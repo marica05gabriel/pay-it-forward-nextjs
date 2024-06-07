@@ -25,16 +25,20 @@ export const BookCard = ({ book, additionalContent }: BookCardProps) => {
       className='h-90 flex flex-col rounded-lg border bg-white p-4'
     >
       <div className='h-72'>
-        <Image
-          src={imageUrl ?? '/no-book-cover-available.png'}
-          width={200}
-          height={70}
-          alt='Placeholder Image'
-          className='h-full w-full rounded-md object-cover'
-          priority={false}
-          placeholder='blur'
-          blurDataURL='/public/no-book-cover-available.png'
-        />
+        <div className='relative h-full w-full'>
+          <Image
+            src={imageUrl ?? '/no-book-cover-available.png'}
+            // width={200}
+            // height={70}
+            fill
+            objectFit='contain'
+            alt='Placeholder Image'
+            className='h-full w-full rounded-md object-cover'
+            priority={false}
+            placeholder='blur'
+            blurDataURL='/public/no-book-cover-available.png'
+          />
+        </div>
       </div>
       <div className='h-80'>
         <div className='flex h-80 flex-col items-center px-1 py-4 align-middle'>

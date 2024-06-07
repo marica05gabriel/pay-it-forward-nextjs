@@ -2,14 +2,34 @@
 import { RoutesEnum, getRouteSettings } from '@/utils/routes-util';
 import { TitlePanel } from '@/components/panels/title-panel';
 import { signIn } from 'next-auth/react';
+import { useSearchParams } from 'next/navigation';
+import _, { isEmpty } from 'lodash';
 
 const Unauthorized = () => {
+  const searchParams = useSearchParams();
+
   const currentRoute = RoutesEnum.DASHBOARD;
   const routeSettings = getRouteSettings(currentRoute);
 
+  const callbackUrlFromParams = searchParams.get('callbackUrl');
+  const callbackUrl =
+    callbackUrlFromParams != null
+      ? callbackUrlFromParams
+      : 'http://localhost:3000/';
+
+  console.log('CALLBACK URL HERE');
+  console.log(callbackUrlFromParams);
+  console.log(callbackUrl);
+
   const handleLogIn = () => {
+    if (_.isEmpty(callbackUrl)) {
+      signIn('keycloak', {
+        callbackUrl: callbackUrl,
+      });
+      return;
+    }
     signIn('keycloak', {
-      callbackUrl: 'http://localhost:3000/',
+      callbackUrl: callbackUrl,
     });
   };
   return (
