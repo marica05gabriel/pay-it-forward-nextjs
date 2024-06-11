@@ -9,22 +9,39 @@ export type BookType = {
   isbn13?: string;
   isbn10?: string;
   imageUrl?: string;
-  currentOwner?: 'gmarica';
-  currentOwnerPublicId?: 'gmarica';
-  currentLocation?: { id: 2; country: 'Romania'; city: 'Cluj-Napoca' };
+  currentOwner?: string;
+  currentOwnerPublicId?: string;
+  currentLocation?: BookLocationType;
+  availabilityStatus: 'AVAILABLE' | 'NOT_AVAILABLE';
+};
+
+export type BookLocationType = {
+  id: number;
+  country: string;
+  city: string;
 };
 
 // Types used for Chat
 export type ChatContact = {
-  id: number;
+  id: string;
   nickname: string;
   avatar: string;
 };
 
 export type Chat = {
   id: number;
-  contactId: number;
+  contactId: string;
   messages: ChatMessage[];
+};
+
+export type Message = {
+  id: string;
+  isLastMessage: boolean;
+  message: string;
+  avatar: string;
+  type: ChatMessageType;
+  from: string;
+  to: string;
 };
 
 export type ActiveChat = {
@@ -37,8 +54,8 @@ export type ChatMessageType = 'incoming' | 'outgoing';
 export type ChatMessage = {
   id: string;
   chatId: number;
-  fromId: number;
-  toId: number;
+  fromId: string;
+  toId: string;
   message: string;
   type: ChatMessageType;
 };

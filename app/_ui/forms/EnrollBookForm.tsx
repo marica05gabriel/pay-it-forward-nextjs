@@ -9,6 +9,7 @@ import clsx from 'clsx';
 import { useSearchBook } from '@/app/_services/useSearchBook';
 import { BookLocation } from '@/app/_services/types';
 import { LoadingComponent } from '../LoadingComponent';
+import { useAddress } from '@thirdweb-dev/react';
 
 export const EnrollBookForm = () => {
   const [location, setLocation] = useState<BookLocation>();
@@ -25,6 +26,8 @@ export const EnrollBookForm = () => {
     responseData: enrollResponse,
     submitForm: enroll,
   } = useEnrollBook();
+
+  const address = useAddress();
 
   const handleOnSearch = (isbn: string) => {
     search(isbn);

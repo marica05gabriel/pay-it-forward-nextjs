@@ -3,9 +3,9 @@ import { isEmpty } from 'lodash';
 
 interface Props {
   chatId: number;
-  myId: number;
-  contactId: number;
-  sendMessage: (toId: number, chatId: number, message: string) => void;
+  myId: string;
+  contactId: string;
+  sendMessage: (chatId: number, toId: string, message: string) => void;
 }
 export const ChatInput = ({ chatId, myId, contactId, sendMessage }: Props) => {
   const [message, setMessage] = useState<string>('');

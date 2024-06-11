@@ -4,10 +4,13 @@ import { LoadingComponent } from '@/app/_ui/LoadingComponent';
 import { TryAgainButton } from '@/app/_ui/buttons/try-again-button';
 import { ROUTES, ROUTE_ITEMS, RoutesEnum } from '@/app/_utils/routes-util';
 import { BookTransfer } from '@/app/_utils/types';
-import { useSigner } from '@thirdweb-dev/react';
+import { metamaskWallet, useConnect, useSigner } from '@thirdweb-dev/react';
 import { useEffect, useState } from 'react';
 import QRCode from 'react-qr-code';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { useThirdWebContext } from '@/app/_utils/context-providers';
+import { sepolia } from 'thirdweb/chains';
+import _ from 'lodash';
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -19,7 +22,12 @@ export const GenerateSignature = ({ transfer }: Props) => {
   const [signature, setSignature] = useState<string>();
   const [validateSingatureUrl, setValidateSignatureUrl] = useState<string>();
   const [urlCopied, setUrlCopied] = useState<boolean>(false);
+  const [connectedAddress, setConnectedAddress] = useState<string>();
+
   const signer = useSigner();
+  const thirdWebContext = useThirdWebContext();
+  const connect = useConnect();
+  const metamaskConfig = metamaskWallet();
 
   useEffect(() => {
     if (urlCopied) {
@@ -52,6 +60,7 @@ export const GenerateSignature = ({ transfer }: Props) => {
   const signMessage = async () => {
     if (!signer) {
       console.warn('No signer!');
+
       return;
     }
     const message = transfer.targetPublicId;
@@ -69,6 +78,24 @@ export const GenerateSignature = ({ transfer }: Props) => {
     setValidateSignatureUrl(url);
   };
   const handleTryAgain = async () => {
+    if (!signer) {
+      console.warn('No signer');
+      try {
+        const chainId =
+          thirdWebContext && thirdWebContext.chain
+            ? thirdWebContext.chain.id
+            : sepolia.id;
+        const wallet = await connect(metamaskConfig, { chainId });
+        const connectedAddress = await wallet.getAddress();
+        if (!_.isEmpty(connectedAddress)) {
+          setConnectedAddress(connectedAddress);
+        }
+      } catch (error) {
+        console.error(error);
+        setLoading(false);
+        return;
+      }
+    }
     const signature = await signMessage();
     if (!signature) {
       console.error('Signature empty!');

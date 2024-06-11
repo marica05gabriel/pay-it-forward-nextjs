@@ -3,7 +3,7 @@
 import { LoadingComponent } from '@/app/_ui/LoadingComponent';
 import { TryAgainButton } from '@/app/_ui/buttons/try-again-button';
 import { ROUTES, ROUTE_ITEMS, RoutesEnum } from '@/app/_utils/routes-util';
-import { BookTransfer, BookType } from '@/app/_utils/types';
+import { BaseResponse, BookTransfer, BookType } from '@/app/_utils/types';
 import {
   metamaskWallet,
   useAddress,
@@ -17,14 +17,22 @@ import QRCode from 'react-qr-code';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { CompleteTransferButton } from '@/app/_ui/buttons/complete-transfer-button';
 import { BookCard } from '@/app/_ui/BookCard';
+import { redirect, useRouter } from 'next/navigation';
+import { extractDataFromReceipt } from '../thirdweb/thirdweb-utils';
+import { stringToBytes } from 'thirdweb/utils';
+import { useThirdWebContext } from '@/app/_utils/context-providers';
+import { sepolia } from 'thirdweb/chains';
+import _ from 'lodash';
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS_PAPER_BOOK;
 
 interface Props {
   transfer: BookTransfer;
   book: BookType;
   signature: string;
   isValid: boolean;
+  canComplete: boolean;
   message: string;
   onComplete: (
     transfer: BookTransfer,
@@ -34,6 +42,7 @@ interface Props {
 }
 export const ValidateSignatureForm = ({
   isValid,
+  canComplete,
   message,
   transfer,
   book,
@@ -48,14 +57,73 @@ export const ValidateSignatureForm = ({
     mutateAsync,
     isLoading,
     error: thirdWebError,
-  } = useContractWrite(contract, 'mint');
+  } = useContractWrite(contract, 'safeTransferFrom');
+  const router = useRouter();
+
   const connect = useConnect();
   const metamaskConfig = metamaskWallet();
-  const address = useAddress();
+  const thirdWebContext = useThirdWebContext();
 
-  const txHash = '';
   const handleOnCompleteTransfer = async () => {
-    const response = await onComplete(transfer, signature, txHash);
+    setLoading(true);
+    try {
+      const chainId =
+        thirdWebContext && thirdWebContext.chain
+          ? thirdWebContext.chain.id
+          : sepolia.id;
+      const wallet = await connect(metamaskConfig, { chainId });
+      const connectedAddress = await wallet.getAddress();
+      if (!_.isEmpty(connectedAddress)) {
+        console.error('No address');
+      }
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+      return;
+    }
+
+    const safeTransferFromResponse = await handleSafeTransferFrom();
+
+    const response: BaseResponse = await onComplete(
+      transfer,
+      signature,
+      safeTransferFromResponse.txHash
+    );
+    console.log('COMPLETE TRANSFER RESPONSE');
+    console.log(response);
+    if (
+      response.status === 'SUCCESS' &&
+      response.code === 'TRANSFER_COMPLETED'
+    ) {
+      setLoading(false);
+      router.push(`${ROUTES[RoutesEnum.BOOK_TRANSFERS]}/transferor`);
+    }
+    setLoading(false);
+  };
+
+  const handleSafeTransferFrom = async () => {
+    const dataObject = {
+      signature: signature,
+      message: transfer.targetPublicId,
+    };
+    const dataToSend = JSON.stringify(dataObject);
+    const dataBytes = stringToBytes(dataToSend);
+    console.log('dataToSend');
+    console.log(dataToSend);
+    console.log('dataBytes');
+    console.log(dataBytes);
+    const params = [
+      transfer.fromPublicId,
+      transfer.toPublicId,
+      Number(`0x${transfer.targetPublicId}`),
+      1,
+      dataBytes,
+    ];
+    const response = await mutateAsync({ args: params });
+    const data = extractDataFromReceipt(response.receipt);
+    console.log('SAVE TRANSFER FROM');
+    console.log(data);
+    return data;
   };
 
   if (loading) {
@@ -72,7 +140,7 @@ export const ValidateSignatureForm = ({
           additionalContent={
             <CompleteTransferButton
               label='Complete transfer'
-              disabled={!isValid}
+              disabled={!isValid || !canComplete}
               onComplete={handleOnCompleteTransfer}
             />
           }

@@ -11,7 +11,6 @@ import {
 } from '@/utils/types';
 import React, { createContext, useCallback, useEffect } from 'react';
 import { ReactNode, useContext, useState } from 'react';
-import { getChats } from '../services/chatService';
 import { useSocket } from './SocketProvider';
 import _ from 'lodash';
 import {
@@ -23,23 +22,24 @@ import {
 import { validateMessage } from './utils';
 import { useContacts } from './ContactsProvider';
 import { PrivateMessageDTO } from './types';
+import { useSession } from 'next-auth/react';
 
 interface ChatContextProps {
   me: ChatContact;
-  contacts: Map<number, ChatContact>;
   chats: Map<number, Chat>;
+  setChats: (chats: Map<number, Chat>) => void;
   activeChat: ActiveChat | undefined;
   setActiveChat: (chatId: number) => void;
-  sendMessage: (chatId: number, toId: number, message: string) => void;
+  sendMessage: (chatId: number, toId: string, message: string) => void;
 }
 export const contextInitialValues: ChatContextProps = {
-  me: { id: -1, nickname: 'No nickname', avatar: 'No avatar' },
-  contacts: new Map(),
+  me: { id: '-1', nickname: 'No nickname', avatar: 'No avatar' },
   chats: new Map(),
+  setChats: () => {},
   activeChat: undefined,
   setActiveChat: (chatId) =>
     console.log(`Initial value for #setActiveChat ${chatId}`),
-  sendMessage: (chatId: number, toId: number, message: string) =>
+  sendMessage: (chatId: number, toId: string, message: string) =>
     console.log(`Send message not initialized!`),
 };
 const ChatContext = createContext<ChatContextProps>(contextInitialValues);
@@ -55,6 +55,7 @@ interface Props {
 export const ChatProvider = ({ me, children }: Props) => {
   const { socket, addEventListener, removeEventListener } = useSocket();
   const { contacts } = useContacts();
+
   const [chats, setChats] = useState<Map<number, Chat>>(
     contextInitialValues.chats
   );
@@ -73,6 +74,7 @@ export const ChatProvider = ({ me, children }: Props) => {
   /**
    * Initialize active chat as first in the chat list
    */
+
   useEffect(() => {
     if (activeChat) {
       return;
@@ -80,7 +82,7 @@ export const ChatProvider = ({ me, children }: Props) => {
     if (!chats || chats.size <= 0 || !contacts || contacts.size <= 0) {
       return;
     }
-    const chat = chats.values().next().value;
+    const chat: Chat = chats.values().next().value;
     const contact = contacts.get(chat.contactId);
     if (!contact) {
       return;
@@ -107,15 +109,15 @@ export const ChatProvider = ({ me, children }: Props) => {
         console.log(ack);
       }
     );
-    socket.emit(
-      GET_CHATS,
-      {
-        userId: me.id,
-      },
-      (ack: { chats: PrivateMessageDTO[] }) => {
-        handleReceiveChats(ack.chats);
-      }
-    );
+    // socket.emit(
+    //   GET_CHATS,
+    //   {
+    //     userId: me.id,
+    //   },
+    //   (ack: { chats: PrivateMessageDTO[] }) => {
+    //     // handleReceiveChats(ack.chats);
+    //   }
+    // );
 
     return () => {
       socket.emit(DETACH_CHATS_EVENT, {
@@ -125,30 +127,12 @@ export const ChatProvider = ({ me, children }: Props) => {
     };
   }, [socket]);
 
-  const handleReceiveChats = useCallback(
-    (receivedChats: PrivateMessageDTO[]) => {
-      console.log('receivedChats');
-      console.log(receivedChats);
-      if (!receivedChats) {
-        return;
-      }
-      const chatList = new Map<number, Chat>();
-      Array.from(receivedChats).forEach((chatFromSocket) => {
-        const chat: Chat = {
-          id: chatFromSocket.id,
-          contactId:
-            me.id === chatFromSocket.userId1 ? chatFromSocket.userId2 : me.id,
-          messages: chatFromSocket.messages.map((message) => ({
-            ...message,
-            type: me.id === message.fromId ? 'outgoing' : 'incoming',
-          })),
-        };
-        chatList.set(chat.id, chat);
-      });
-      setChats(chatList);
-    },
-    []
-  );
+  // const handleReceiveChats = useCallback((receivedChats: Map<number, Chat>) => {
+  //   console.log('receivedChats');
+  //   console.log(receivedChats);
+
+  //   setChats(receivedChats);
+  // }, []);
 
   const handleReceivePrivateMessage = useCallback((payload: ChatMessage) => {
     addMessageToChat(
@@ -178,8 +162,8 @@ export const ChatProvider = ({ me, children }: Props) => {
     (
       id: string,
       chatId: number,
-      fromId: number,
-      toId: number,
+      fromId: string,
+      toId: string,
       message: string
     ) => {
       console.log(chats);
@@ -229,7 +213,7 @@ export const ChatProvider = ({ me, children }: Props) => {
     [me, chats, contacts, activeChat]
   );
 
-  const sendMessage = (chatId: number, toId: number, messageText: string) => {
+  const sendMessage = (chatId: number, toId: string, messageText: string) => {
     if (!socket) {
       console.error('Socket connection lost...');
       return;
@@ -276,8 +260,8 @@ export const ChatProvider = ({ me, children }: Props) => {
 
   const value = {
     me,
-    contacts,
     chats,
+    setChats,
     activeChat,
     setActiveChat: handleSetActiveChat,
     sendMessage,

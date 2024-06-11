@@ -4,23 +4,10 @@ import { OutgoingMessage } from './components/OutgoingMessage';
 import { MainChatContainer } from './container/MainChatContainer';
 import { ChatMessagesContainer } from './container/ChatMessagesContainer';
 import { ChatInput } from './components/ChatInput';
-import {
-  ActiveChat,
-  Chat,
-  ChatContact,
-  ChatMessage,
-  ChatMessageType,
-} from '@/app/_utils/types';
+import { ChatMessage, ChatMessageType, Message } from '@/app/_utils/types';
 import { useEffect, useState } from 'react';
 import { useChat } from '../context-providers/ChatProvider';
 
-type Message = {
-  id: string;
-  isLastMessage: boolean;
-  message: string;
-  avatar: string;
-  type: ChatMessageType;
-};
 export const MainChatArea = () => {
   const { me, activeChat, sendMessage } = useChat();
   const [messages, setMessages] = useState<Message[]>([]);
@@ -34,16 +21,21 @@ export const MainChatArea = () => {
     const contact = activeChat.contact;
     const messages = activeChat.chat.messages;
     const lastMessageId = messages[messages.length - 1]?.id;
-    messages.forEach((message) => {
+    messages.forEach((message: ChatMessage) => {
       const isLastMessage = lastMessageId === message.id;
-      const avatar = message.type === 'incoming' ? contact.avatar : me.avatar;
-      result.push({
+      const messageType =
+        me.nickname === message.fromId ? 'outgoing' : 'incoming';
+      const avatar = messageType === 'incoming' ? contact.avatar : me.avatar;
+      const messageFormatted: Message = {
         id: message.id,
         message: message.message,
         isLastMessage: isLastMessage,
         avatar: avatar,
-        type: message.type,
-      });
+        type: messageType,
+        from: message.fromId,
+        to: message.toId,
+      };
+      result.push(messageFormatted);
     });
     setMessages(result);
   }, [activeChat]);
@@ -64,7 +56,8 @@ export const MainChatArea = () => {
               if (message.type === 'incoming') {
                 return (
                   <IncomingMessage
-                    key={index}
+                    key={message.id}
+                    sender={message.to}
                     id={message.id}
                     isLastMessage={message.isLastMessage}
                     message={message.message}
@@ -74,8 +67,9 @@ export const MainChatArea = () => {
               } else {
                 return (
                   <OutgoingMessage
-                    key={index}
+                    key={message.id}
                     id={message.id}
+                    sender={message.from}
                     isLastMessage={message.isLastMessage}
                     message={message.message}
                     avatar={message.avatar}

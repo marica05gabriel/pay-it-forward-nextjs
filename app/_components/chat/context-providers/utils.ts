@@ -10,7 +10,7 @@ import _ from 'lodash';
 export const validateMessage = (
   message: ChatMessage,
   chats: Map<number, Chat>,
-  contacts: Map<number, ChatContact>,
+  contacts: Map<string, ChatContact>,
   me: ChatContact
 ): ValidationResult => {
   if (_.isEmpty(message.message)) {
@@ -53,7 +53,7 @@ export const validateMessage = (
 export const prepareData = (
   message: ChatMessage,
   chats: Map<number, Chat>,
-  contacts: Map<number, ChatContact>
+  contacts: Map<string, ChatContact>
 ) => {
   const chat = chats.get(message.chatId);
   const to = contacts.get(message.toId);

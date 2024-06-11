@@ -23,6 +23,7 @@ import {
 import _ from 'lodash';
 import { AcceptBookRequestButton } from '@/app/_ui/buttons/approve-book-request-button';
 import { RefuseBookRequestButton } from '@/app/_ui/buttons/refuse-book-request-button';
+import { Suspense } from 'react';
 
 const TRANSFER_REQUESTS_URL = `${process.env.RESOURCE_SERVER_URL_TRANSFER}/request`;
 const FIND_BOOKS_URL = `${process.env.RESOURCE_SERVER_URL_BOOK}`;
@@ -55,7 +56,8 @@ export default async function TransferRequestsPage({
   const routeSettings = getRouteSettings(currentRoute);
 
   let response = await fetch(
-    `${TRANSFER_REQUESTS_URL}/${currentTransferParty}/${username}?page=${page - 1}&size=${size}`,
+    // `${TRANSFER_REQUESTS_URL}/${currentTransferParty}/${username}?page=${page - 1}&size=${size}`,
+    `${TRANSFER_REQUESTS_URL}/${currentTransferParty}/${username}?page=${page - 1}&size=50`,
     {
       method: 'GET',
       headers: {
@@ -79,19 +81,17 @@ export default async function TransferRequestsPage({
     totalPages = transferRequestsData.page.totalPages;
     totalElements = transferRequestsData.page.totalElements;
   }
-  console.log(transferRequests);
 
   const bookIdToRequestId = new Map<string, TransferRequest>();
 
   transferRequests.forEach((tr) => bookIdToRequestId.set(tr.target, tr));
-  const bookIdList = transferRequests.map((tr) => tr.target);
-
-  console.log('ID list');
-  console.log(bookIdList);
+  const pendingTransfersRequests = transferRequests.filter(
+    (tr) => tr.status === 'PENDING'
+  );
+  const bookIdList = pendingTransfersRequests.map((tr) => tr.target);
 
   let books: BookType[] = [];
   if (totalElements > 0) {
-    // if (totalElements > 0) {
     response = await fetch(
       `${FIND_BOOKS_URL}/byIdList?page=${page - 1}&size=${size}`,
       {
@@ -102,14 +102,11 @@ export default async function TransferRequestsPage({
         body: JSON.stringify({ idList: bookIdList }),
       }
     );
-    console.log('By id list response:');
-    console.log(response);
     const booksData = await response.json();
     if (response.ok) {
       books = booksData.content;
       totalPages = booksData.page.totalPages;
     }
-    console.log(books);
   }
 
   return (
@@ -159,50 +156,47 @@ export default async function TransferRequestsPage({
 
         <ListMyBooks
           books={books}
-          additionalContent={(bookId) =>
+          additionalContent={(book) =>
             currentTransferParty === 'transferee' ? (
               <CancelBookRequestButton
-                key={bookId}
-                disabled={bookId % 2 == 0}
+                key={book.id}
                 label='Cancel the request'
                 onSubmit={async () => {
                   'use server';
                   const response = await handleCancelBookRequest(
-                    bookId,
+                    book.id,
                     bookIdToRequestId
                   );
                   return response;
                 }}
               />
             ) : (
-              <div>
+              <Suspense>
                 <AcceptBookRequestButton
-                  key={`${bookId}_approve_button`}
-                  disabled={bookId % 2 == 0}
+                  key={`${book.id}_approve_button`}
                   label='Accept request'
                   onSubmit={async () => {
                     'use server';
                     const response = await handleAcceptBookRequest(
-                      bookId,
+                      book.id,
                       bookIdToRequestId
                     );
                     return response;
                   }}
                 />
                 <RefuseBookRequestButton
-                  key={`${bookId}_refuse_button`}
-                  disabled={bookId % 2 == 0}
+                  key={`${book.id}_refuse_button`}
                   label='Refuse request'
                   onSubmit={async () => {
                     'use server';
                     const response = await handleRefuseBookRequest(
-                      bookId,
+                      book.id,
                       bookIdToRequestId
                     );
                     return response;
                   }}
                 />
-              </div>
+              </Suspense>
             )
           }
         />

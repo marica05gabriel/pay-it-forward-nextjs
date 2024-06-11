@@ -58,6 +58,10 @@ export default async function FindBooksPage({
     totalPages = data.page.totalPages;
   }
   console.log(books);
+  books.sort(
+    (book1, book2) =>
+      book1.availabilityStatus.length - book2.availabilityStatus.length
+  );
 
   return (
     <>
@@ -69,14 +73,17 @@ export default async function FindBooksPage({
         <SelectLocationForm />
         <ListMyBooks
           books={books}
-          additionalContent={(bookId) => (
+          additionalContent={(book) => (
             <RequestBookButton
-              key={bookId}
-              disabled={false}
+              key={book.id}
+              disabled={book.availabilityStatus === 'NOT_AVAILABLE'}
               label='Request this book'
               onSubmit={async (walletAddress) => {
                 'use server';
-                const response = await handleRequestBook(bookId, walletAddress);
+                const response = await handleRequestBook(
+                  book.id,
+                  walletAddress
+                );
                 return response;
               }}
             />

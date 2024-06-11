@@ -144,7 +144,7 @@ export const acceptBookRequest = async (transferRequest: TransferRequest) => {
       },
       body: JSON.stringify({
         candidateId: session.user.name,
-        candidatePublicId: transferRequest.toPublicId,
+        candidatePublicId: transferRequest.fromPublicId,
       }),
     }
   );
@@ -161,7 +161,11 @@ export const acceptBookRequest = async (transferRequest: TransferRequest) => {
   } else {
     console.error('ACCEPT REQUEST NOT SUCCESSFUL');
     console.error(acceptResponseData);
-    throw Error('ACCEPT REQUEST SUCCESSFUL');
+    return {
+      status: acceptResponseData.status,
+      code: acceptResponseData.code,
+      message: acceptResponseData.message,
+    };
   }
 };
 

@@ -25,10 +25,15 @@ export const ChatContactComponent = ({
       onClick={() => setActiveChat(id)}
     >
       <div className='mr-3 h-12 w-12 rounded-full bg-gray-300'>
+        {/* {avatar} */}
+        {/* <div
+          className='h-12 w-12'
+          dangerouslySetInnerHTML={{ __html: avatar }}
+        /> */}
         <img
           src={avatar}
           alt='User Avatar'
-          className='h-12 w-12 rounded-full'
+          className='h-12 min-h-12 w-12 min-w-12 rounded-full'
         />
       </div>
       <div className='flex-1'>

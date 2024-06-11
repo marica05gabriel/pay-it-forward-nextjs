@@ -46,14 +46,28 @@ export const BookCard = ({ book, additionalContent }: BookCardProps) => {
             className='text-l my-2 flex h-20 justify-center overflow-hidden font-bold text-gray-900'
             title={title}
           >
-            {title}
+            <p className='items-center justify-center'>{title}</p>
           </div>
           <div
             className='w-full text-base text-gray-700'
             title={`Authors of book ${book.id} ISBN ${book.isbn13}`}
           >
+            <div
+              title={`Book with isbn ${book.isbn13} is ${book.availabilityStatus}`}
+              className='flex w-full flex-row items-center gap-2'
+            >
+              <b>
+                <u>Status</u>:
+              </b>
+              {book.availabilityStatus !== 'AVAILABLE' && (
+                <span className='me-3 flex h-3 w-3 rounded-full bg-red-500'></span>
+              )}
+              {book.availabilityStatus === 'AVAILABLE' && (
+                <span className='me-3 flex h-3 w-3 rounded-full bg-green-500'></span>
+              )}
+            </div>
             {authors && (
-              <p>
+              <p className='max-h-40 overflow-hidden'>
                 <span>
                   <b>
                     <u>Authors</u>:{' '}

@@ -3,9 +3,11 @@
  */
 const PROTOCOL = 'http';
 const BASE_URL = 'localhost';
-const PORT = '8051';
+const PORT_SOCKET = '8055';
+const PORT_REST = '8050';
 // ex: http://localhost:8085
-export const SERVER_URL = `${PROTOCOL}://${BASE_URL}:${PORT}`;
+export const SOCKET_SERVER_URL = `${PROTOCOL}://${BASE_URL}:${PORT_SOCKET}`;
+export const REST_SERVER_URL = `${PROTOCOL}://${BASE_URL}:${PORT_REST}`;
 
 export const JOIN_CHATS_EVENT = 'join_chats';
 export const DETACH_CHATS_EVENT = 'detach_chats';

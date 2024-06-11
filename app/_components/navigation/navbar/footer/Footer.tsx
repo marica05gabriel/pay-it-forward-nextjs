@@ -1,4 +1,6 @@
 'use client';
+import { funEmoji } from '@dicebear/collection';
+import { createAvatar } from '@dicebear/core';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { RefObject, useRef } from 'react';
 
@@ -35,7 +37,7 @@ export const Footer = () => {
       <div className='flex h-full items-center'>
         <div className='flex h-full w-32 items-center justify-end border-r pr-16'></div>
         <div className='flex h-full w-full'>
-          <div className='flex h-full w-16 items-center justify-center xl:w-32 xl:border-r'>
+          {/* <div className='flex h-full w-16 items-center justify-center xl:w-32 xl:border-r'>
             <div className='relative'>
               <a
                 aria-label='show notifications'
@@ -62,7 +64,7 @@ export const Footer = () => {
               </a>
               <div className='absolute inset-0 m-auto mr-1 mt-1 h-2 w-2 animate-ping rounded-full border border-white bg-red-400'></div>
             </div>
-          </div>
+          </div> */}
           <div
             aria-haspopup='true'
             className='relative flex w-full cursor-pointer items-center justify-end'
@@ -85,11 +87,16 @@ export const Footer = () => {
                   onClick={() => dropdownHandler(avatarRef)}
                   className='flex items-center rounded focus:outline-none focus:ring-2 focus:ring-gray-800 focus:ring-offset-2'
                 >
-                  <img
-                    className='h-10 w-10 rounded-full object-cover'
-                    src='https://tuk-cdn.s3.amazonaws.com/assets/components/sidebar_layout/sl_1.png'
-                    alt='avatar'
-                  />
+                  {session.user?.name && (
+                    <img
+                      className='h-10 w-10 rounded-full object-cover'
+                      src={createAvatar(funEmoji, {
+                        seed: session?.user?.name,
+                      }).toDataUriSync()}
+                      alt='avatar'
+                    />
+                  )}
+
                   <p className='ml-2 text-sm text-gray-800'>
                     {session.user?.name}
                   </p>
@@ -109,7 +116,16 @@ export const Footer = () => {
             >
               <li className='cursor-pointer py-2 text-sm leading-3 tracking-normal text-gray-600 hover:text-indigo-700 focus:text-indigo-700 focus:outline-none'>
                 <div className='flex items-center'>
-                  <svg
+                  {session?.user?.name && (
+                    <img
+                      className='h-8 w-8 rounded-full'
+                      src={createAvatar(funEmoji, {
+                        seed: session?.user?.name,
+                      }).toDataUriSync()}
+                    />
+                  )}
+
+                  {/* <svg
                     xmlns='http://www.w3.org/2000/svg'
                     className='icon icon-tabler icon-tabler-user'
                     width='20'
@@ -124,7 +140,7 @@ export const Footer = () => {
                     <path stroke='none' d='M0 0h24v24H0z' />
                     <circle cx='12' cy='7' r='4' />
                     <path d='M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2' />
-                  </svg>
+                  </svg> */}
                   <a href='/' className='ml-2'>
                     My Profile
                   </a>

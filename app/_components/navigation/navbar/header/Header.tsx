@@ -5,7 +5,8 @@ export const Header = () => (
   <Link href='/'>
     <div aria-label='Home' className='mr-10 flex items-center'>
       <Image
-        src='https://tuk-cdn.s3.amazonaws.com/can-uploader/light_with_dark_page_title_and_white_box-svg6.svg'
+        // src='https://tuk-cdn.s3.amazonaws.com/can-uploader/light_with_dark_page_title_and_white_box-svg6.svg'
+        src='/pay-it-forward-logo.jpeg'
         alt='logo'
         width={50}
         height={50}

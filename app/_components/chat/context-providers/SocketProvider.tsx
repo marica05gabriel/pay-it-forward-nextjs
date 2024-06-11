@@ -9,7 +9,7 @@ import {
   useState,
 } from 'react';
 import { Socket, io } from 'socket.io-client';
-import { SERVER_URL } from './constants';
+import { SOCKET_SERVER_URL } from './constants';
 import { ChatContact } from '@/app/_utils/types';
 
 interface SocketContextProps {
@@ -43,7 +43,7 @@ export const SocketProvider = ({ me, children }: Props) => {
   const [events, setEvents] = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    const newSocket = io(SERVER_URL, { query: { user_id: me.id } });
+    const newSocket = io(SOCKET_SERVER_URL, { query: { user_id: me.id } });
     setSocket(newSocket);
 
     return () => {

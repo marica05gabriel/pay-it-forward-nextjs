@@ -15,6 +15,10 @@ export const ChatContactList = () => {
   const { contacts } = useContacts();
   const activeChatId = activeChat?.chat?.id;
 
+  console.log('HEREEEE');
+  console.log(chats);
+  console.log(contacts);
+
   const prepareData = () => {
     console.log(chats);
     const data: Data[] = Array.from(chats.values())

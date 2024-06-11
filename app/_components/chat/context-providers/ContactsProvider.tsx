@@ -1,20 +1,15 @@
 'use client';
 
 import { ChatContact } from '@/utils/types';
-import {
-  ReactNode,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
-import { getContacts } from '../services/contactsService';
+import { ReactNode, createContext, useContext, useState } from 'react';
 
 interface ContactsContextProps {
-  contacts: Map<number, ChatContact>;
+  contacts: Map<string, ChatContact>;
+  setContacts: (contacts: Map<string, ChatContact>) => void;
 }
 const contactsContextInitialValues: ContactsContextProps = {
   contacts: new Map(),
+  setContacts: () => {},
 };
 const ContactsContext = createContext<ContactsContextProps>(
   contactsContextInitialValues
@@ -25,23 +20,11 @@ interface Props {
   children: ReactNode;
 }
 export const ContactsProvider = ({ me, children }: Props) => {
-  const [contacts, setContacts] = useState<Map<number, ChatContact>>(
+  const [contacts, setContacts] = useState<Map<string, ChatContact>>(
     contactsContextInitialValues.contacts
   );
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await getContacts(me.id);
-      const newContacts = new Map();
-      data.map((contact) => newContacts.set(contact.id, contact));
-      setContacts(newContacts);
-    };
-    fetchData().catch((error) => {
-      console.error(error);
-    });
-  }, []);
-
-  const value = { contacts };
+  const value = { contacts, setContacts };
   return (
     <ContactsContext.Provider value={value}>
       {children}

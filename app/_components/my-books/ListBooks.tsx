@@ -5,7 +5,7 @@ import { ReactNode } from 'react';
 
 interface Props {
   books: BookType[];
-  additionalContent?: (bookId: number) => ReactNode;
+  additionalContent?: (book: BookType) => ReactNode;
 }
 export const ListMyBooks = ({ books, additionalContent }: Props) => {
   return (
@@ -15,9 +15,7 @@ export const ListMyBooks = ({ books, additionalContent }: Props) => {
           <BookCard
             key={book.id}
             book={book}
-            additionalContent={
-              !!additionalContent && additionalContent(book.id)
-            }
+            additionalContent={!!additionalContent && additionalContent(book)}
           />
         ))}
       </div>

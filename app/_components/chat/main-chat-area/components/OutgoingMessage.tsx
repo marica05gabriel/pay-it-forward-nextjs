@@ -2,12 +2,14 @@ import { useCallback } from 'react';
 
 interface Props {
   id: string;
+  sender: string;
   message: string;
   avatar: string;
   isLastMessage: boolean;
 }
 export const OutgoingMessage = ({
   id,
+  sender,
   message,
   avatar,
   isLastMessage,
@@ -21,6 +23,7 @@ export const OutgoingMessage = ({
   return (
     <div
       id={`message-${id}`}
+      title={`Sender: ${sender}`}
       ref={isLastMessage ? setRef : null}
       className='mb-4 flex cursor-pointer justify-end'
     >

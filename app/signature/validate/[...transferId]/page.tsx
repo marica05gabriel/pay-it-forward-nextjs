@@ -57,6 +57,8 @@ export default async function ValidateSignaturePage({
   const transfer: BookTransfer = await transferResponse.json();
   console.log('TRANSFER FOUND');
   console.log(transfer);
+  const canComplete = transfer.status === 'PENDING' ? true : false;
+  // const canComplete = true;
 
   const response = await fetch(`${FIND_BOOKS_URL}/${transfer.target}`, {
     method: 'GET',
@@ -102,6 +104,7 @@ export default async function ValidateSignaturePage({
       <MainContainer>
         <ValidateSignatureForm
           isValid={isValid}
+          canComplete={canComplete}
           message={validateSignatureResponseData.message}
           transfer={transfer}
           book={book}

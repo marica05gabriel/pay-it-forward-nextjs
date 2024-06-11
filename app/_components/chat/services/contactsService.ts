@@ -1,22 +1,29 @@
 'use client';
-import { me } from '@/app/_utils/chat-contact-list-test-data';
-import { ChatContact } from '@/app/_utils/types';
+import { BookTransfer, ChatContact } from '@/app/_utils/types';
 
-export const getContacts = async (userId: number) => {
-  const response = await fetch(
-    'http://localhost:8050/contacts?' +
-      new URLSearchParams({
-        userId: me.id.toString(),
-      }),
-    {
-      method: 'GET',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
-  );
+export const getContacts = async (username: string) => {
+  const response = await fetch(`/transfer/byUser/${username}`);
+  console.log('CHAT TRANSFERS123');
+  console.log(response);
+  if (response.status !== 200) {
+    console.error('NOT OK');
+    console.error('Response');
+    return [];
+  }
+  let transfersData: BookTransfer[] = await response.json();
+  console.log('TRANSFER_DATA123');
+  console.log(transfersData);
+  const chatContacts = transfersData.map((t) => {
+    const contactId = t.from === username ? t.to : t.from;
+    const contact: ChatContact = {
+      id: contactId,
+      nickname: contactId,
+      avatar: '',
+    };
+    return contact;
+  });
 
-  const data = (await response.json()) as { contacts: ChatContact[] };
-  return data.contacts;
+  console.log('CHAT CONTACTS');
+  console.log(chatContacts);
+  return chatContacts;
 };
