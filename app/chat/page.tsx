@@ -34,6 +34,7 @@ export default async function ChatPage() {
     redirect(ROUTES[RoutesEnum.UNAUTHORIZED]);
   }
 
+  console.log(`Request to: ${TRANSFERS_URL}/byUser/${username}`);
   let response = await fetch(`${TRANSFERS_URL}/byUser/${username}`, {
     method: 'GET',
     headers: {
@@ -45,6 +46,7 @@ export default async function ChatPage() {
     console.error('Response');
   }
   let transfersData: BookTransfer[] = await response.json();
+  console.log(`TransferData: ${transfersData}`);
 
   const chatContacts = new Map<string, ChatContact>();
   const withUsers = new Set<string>();
@@ -63,6 +65,7 @@ export default async function ChatPage() {
   });
   const body = JSON.stringify({ ids: Array.from(withUsers) });
 
+  console.log(`Reqeust to: ${CHAT_SERVER_URL}/chatWith/${username}`);
   response = await fetch(`${CHAT_SERVER_URL}/chatWith/${username}`, {
     method: 'POST',
     headers: {
@@ -78,6 +81,7 @@ export default async function ChatPage() {
       messages: ChatMessage[];
     }[];
   } = await response.json();
+
   console.log(chatResponseData);
   const chatList = new Map<number, Chat>();
   chatResponseData.chats.forEach((chat) => {
@@ -95,6 +99,10 @@ export default async function ChatPage() {
       seed: username,
     }).toDataUriSync(),
   };
+  console.log(`Chat List:`);
+  console.log(chatList);
+  console.log('chatContacts');
+  console.log(chatContacts);
   return (
     <ContactsProvider me={me}>
       <SocketProvider me={me}>
