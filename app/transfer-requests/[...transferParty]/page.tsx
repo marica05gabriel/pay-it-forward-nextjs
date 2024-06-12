@@ -55,6 +55,9 @@ export default async function TransferRequestsPage({
   const currentRoute = RoutesEnum.TRANSFER_REQUESTS;
   const routeSettings = getRouteSettings(currentRoute);
 
+  console.log(
+    `Request for ${TRANSFER_REQUESTS_URL}/${currentTransferParty}/${username}?page=${page - 1}&size=50`
+  );
   let response = await fetch(
     // `${TRANSFER_REQUESTS_URL}/${currentTransferParty}/${username}?page=${page - 1}&size=${size}`,
     `${TRANSFER_REQUESTS_URL}/${currentTransferParty}/${username}?page=${page - 1}&size=50`,
@@ -90,8 +93,12 @@ export default async function TransferRequestsPage({
   );
   const bookIdList = pendingTransfersRequests.map((tr) => tr.target);
 
+  console.log(`Books by pending transfer requests: ${bookIdList}`);
   let books: BookType[] = [];
   if (totalElements > 0) {
+    console.log(
+      `Request for: ${FIND_BOOKS_URL}/byIdList?page=${page - 1}&size=${size}`
+    );
     response = await fetch(
       `${FIND_BOOKS_URL}/byIdList?page=${page - 1}&size=${size}`,
       {
@@ -106,6 +113,7 @@ export default async function TransferRequestsPage({
     if (response.ok) {
       books = booksData.content;
       totalPages = booksData.page.totalPages;
+      console.log(`[Transfer-requests] Book Data: ${books}`);
     }
   }
 
